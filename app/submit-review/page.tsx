@@ -1,62 +1,61 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { ShieldCheck, Timer, Zap } from "lucide-react";
-import { CoachingApplicationForm } from "@/components/CoachingApplicationForm";
-import { HtkBadge } from "@/components/htk/HtkBadge";
-import { MobileStickyCta } from "@/components/htk/MobileStickyCta";
+import { Camera, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ReviewSubmissionForm } from "@/components/ReviewSubmissionForm";
 import { SiteFooter } from "@/components/htk/SiteFooter";
 import { SiteHeader } from "@/components/htk/SiteHeader";
-import { CtaLink } from "@/components/htk/CtaLink";
-import { HTK_BOOKING_URL } from "@/lib/htk-config";
+import { MobileStickyCta } from "@/components/htk/MobileStickyCta";
+import { HtkBadge } from "@/components/htk/HtkBadge";
 
 export const metadata: Metadata = {
-  title: "Apply for Coaching | HTK Training",
+  title: "Submit a Review | HTK Training",
   description:
-    "Apply for HTK Training coaching with a short performance assessment."
+    "Submit an official HTK Training review or testimonial for internal review and possible public display."
 };
 
-const standards = [
+const reviewStandards = [
   {
-    title: "Explosive output",
-    body: "Training built to sharpen force, speed, and repeat effort.",
-    icon: Zap
+    title: "Clear proof",
+    body: "Structured feedback that can actually become usable social proof.",
+    icon: CheckCircle2
   },
   {
-    title: "Structured progression",
-    body: "Clear phases, clear standards, and no wasted work.",
-    icon: Timer
-  },
-  {
-    title: "Real-world resilience",
-    body: "Performance that holds together outside perfect conditions.",
+    title: "Public permission control",
+    body: "You decide whether HTK can display the review publicly or keep it private.",
     icon: ShieldCheck
+  },
+  {
+    title: "Media-ready intake",
+    body: "Optional screenshot or image upload so written proof can turn into stronger assets.",
+    icon: Camera
   }
 ];
 
-export default function ApplyPage() {
+export default function SubmitReviewPage() {
   return (
     <main className="min-h-screen bg-[#050505] text-white">
-      <SiteHeader currentPath="/apply" />
+      <SiteHeader currentPath="/submit-review" />
 
       <section className="relative isolate overflow-hidden border-b border-white/10">
         <Image
-          src="/htk/htk-training-01.jpg"
-          alt="HTK Training athlete"
+          src="/htk/gym-operator.jpg"
+          alt="HTK review submission"
           fill
           priority
           sizes="100vw"
-          className="absolute inset-0 -z-30 object-cover object-top opacity-[0.2] grayscale-[18%]"
+          className="absolute inset-0 -z-30 object-cover object-top opacity-[0.16] grayscale-[18%]"
         />
-        <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,5,5,0.74)_0%,rgba(5,5,5,0.9)_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,5,5,0.72)_0%,rgba(5,5,5,0.9)_100%)]" />
         <div className="container-px mx-auto max-w-7xl py-16 md:py-20">
           <div className="max-w-3xl">
-            <HtkBadge>HTK coaching intake</HtkBadge>
-            <h1 className="mt-4 text-4xl font-black leading-tight text-white sm:text-5xl md:text-6xl">
-              Apply for coaching with intent.
+            <HtkBadge>Client proof intake</HtkBadge>
+            <h1 className="mt-5 text-4xl font-black leading-tight text-white sm:text-5xl md:text-6xl">
+              Submit a review that reflects real work.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-white/64">
-              This is a short performance assessment for athletes and disciplined
-              individuals who want real structure, real pressure, and real results.
+              This is an official HTK review submission page built for serious feedback,
+              not casual comments. Your response can help HTK document real outcomes and
+              publish legitimate proof with the right permissions.
             </p>
           </div>
         </div>
@@ -64,21 +63,21 @@ export default function ApplyPage() {
 
       <section className="py-16 md:py-20">
         <div className="container-px mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-          <CoachingApplicationForm />
+          <ReviewSubmissionForm />
 
           <aside className="space-y-5">
             <div className="overflow-hidden rounded-lg border border-white/10 bg-[#090909]">
               <div className="relative aspect-[4/5] border-b border-white/10">
                 <Image
-                  src="/htk/nmu-football.jpg"
-                  alt="HTK Training athlete at Northern Michigan"
+                  src="/htk/train-for-real-life.png"
+                  alt="HTK Training review standards"
                   fill
                   sizes="(min-width: 1024px) 35vw, 100vw"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.1)_0%,rgba(5,5,5,0.85)_100%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.08)_0%,rgba(5,5,5,0.85)_100%)]" />
                 <div className="absolute bottom-4 left-4 right-4 rounded-md border border-white/10 bg-black/55 px-4 py-3 text-sm font-black uppercase text-white/80 backdrop-blur">
-                  Coaching is built for output, resilience, and athletic carryover.
+                  Reviews are screened before they become public proof.
                 </div>
               </div>
             </div>
@@ -86,17 +85,14 @@ export default function ApplyPage() {
             <div className="rounded-lg border border-white/10 bg-white/[0.035] p-6">
               <p className="text-sm font-black uppercase text-red-400">What happens next</p>
               <div className="mt-5 space-y-4">
-                <Step number="01" body="Your assessment is reviewed for fit, goals, and commitment." />
-                <Step number="02" body="If coaching makes sense, I will reach out with the next move." />
-                <Step number="03" body="If you want to talk first, you can book a consultation right now." />
+                <Step number="01" body="Your submission is stored, reviewed, and organized in the internal review queue." />
+                <Step number="02" body="HTK decides whether the review stays internal, gets published, or gets featured." />
+                <Step number="03" body="If you checked the video box, HTK knows you are open to a stronger testimonial asset." />
               </div>
-              <CtaLink href={HTK_BOOKING_URL} external variant="secondary" className="mt-6 w-full">
-                Book a Consultation
-              </CtaLink>
             </div>
 
             <div className="grid gap-4">
-              {standards.map((item) => {
+              {reviewStandards.map((item) => {
                 const Icon = item.icon;
 
                 return (

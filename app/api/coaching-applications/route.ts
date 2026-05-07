@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { formatSupabaseError } from "@/lib/supabase";
 import {
   validateCoachingApplicationPayload
 } from "@/lib/coaching-application";
@@ -12,12 +13,16 @@ import {
 } from "@/lib/coaching-application-storage";
 
 export async function GET() {
-  const result = await listCoachingApplicationsWithSource();
+  try {
+    const result = await listCoachingApplicationsWithSource();
 
-  return NextResponse.json({
-    ...result,
-    notification: getCoachingApplicationNotificationStatus()
-  });
+    return NextResponse.json({
+      ...result,
+      notification: getCoachingApplicationNotificationStatus()
+    });
+  } catch (error) {
+    return NextResponse.json({ error: formatSupabaseError(error) }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
@@ -41,14 +46,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const storedApplication = await saveCoachingApplication(validation.payload);
-  const notification = await sendCoachingApplicationNotification(storedApplication);
+  try {
+    const storedApplication = await saveCoachingApplication(validation.payload);
+    const notification = await sendCoachingApplicationNotification(storedApplication);
 
-  return NextResponse.json({
-    ok: true,
-    id: storedApplication.id,
-    createdAt: storedApplication.createdAt,
-    storage: storedApplication.storage,
-    notification
-  });
+    return NextResponse.json({
+      ok: true,
+      id: storedApplication.id,
+      createdAt: storedApplication.createdAt,
+      storage: storedApplication.storage,
+      notification
+    });
+  } catch (error) {
+    return NextResponse.json({ error: formatSupabaseError(error) }, { status: 500 });
+  }
 }

@@ -1,317 +1,194 @@
 import Image from "next/image";
-import Link from "next/link";
-import type { ReactNode } from "react";
-import {
-  Activity,
-  BadgeCheck,
-  Dumbbell,
-  Instagram,
-  Mail,
-  ShieldCheck,
-  Target,
-  Timer,
-  Youtube,
-  Zap
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import type { Metadata } from "next";
+import { ShieldCheck, TimerReset, Zap } from "lucide-react";
 import { CtaLink } from "@/components/htk/CtaLink";
+import { HtkBadge } from "@/components/htk/HtkBadge";
+import { MobileStickyCta } from "@/components/htk/MobileStickyCta";
+import { SectionIntro } from "@/components/htk/SectionIntro";
+import { SiteFooter } from "@/components/htk/SiteFooter";
+import { SiteHeader } from "@/components/htk/SiteHeader";
 import { HTK_APPLICATION_PATH, HTK_BOOKING_URL } from "@/lib/htk-config";
+import { listApprovedPublicReviews } from "@/lib/review-storage";
 
-const navItems = [
-  { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "About", href: "#about" },
-  { label: "Process", href: "#process" },
-  { label: "Results", href: "#results" },
-  { label: "Contact", href: "#contact" }
-];
+export const metadata: Metadata = {
+  title: "HTK Training | Hard to Kill Training",
+  description:
+    "Elite performance coaching for athletes and high performers building explosiveness, endurance, mobility, durability, and serious physical capability."
+};
 
-const trustIndicators = [
-  "Multi-sport athlete",
-  "Northern Michigan football",
-  "Marine Corps background",
-  "Performance specialization"
-];
+export const dynamic = "force-dynamic";
 
-const pillars: Array<{ title: string; body: string; icon: LucideIcon }> = [
+const pillars = [
   {
     title: "Explosive",
-    body: "Power you can express on the field, in the gym, and under pressure.",
+    body: "Power that carries into the field, the gym, and real pressure.",
     icon: Zap
   },
   {
-    title: "Mobile",
-    body: "Strong positions, clean movement, and the range to stay dangerous.",
-    icon: Activity
-  },
-  {
     title: "Enduring",
-    body: "An engine that holds up after the easy work is gone.",
-    icon: Timer
+    body: "Conditioning that supports performance without making the body feel flat.",
+    icon: TimerReset
   },
   {
-    title: "Resilient",
-    body: "Training that builds armor without sacrificing speed or athleticism.",
+    title: "Durable",
+    body: "Mobility, structure, and progression that hold up under hard work.",
     icon: ShieldCheck
   }
 ];
 
-const audiences = [
-  "Athletes who need speed, strength, and repeat power",
-  "Former athletes who want their edge back",
-  "Military-minded men and women who train with intent",
-  "High performers who need structure and standards",
-  "Disciplined beginners ready to outgrow random workouts",
-  "Anyone tired of soft fitness and empty motivation"
-];
-
-const services = [
+const servicePreview = [
   {
-    title: "Performance Consultation",
-    body: "A direct assessment of your goals, training history, constraints, and next move.",
-    cta: "Book Consultation",
+    title: "Consultation",
+    body: "Direct clarity on your current level, your next phase, and the right move forward.",
+    cta: "Book a Consultation",
     href: HTK_BOOKING_URL,
     external: true,
-    image: "/htk/htk-training-01.jpg",
-    meta: "Best first step"
+    image: "/htk/hero-field-athlete.jpg"
   },
   {
-    title: "1:1 Coaching",
-    body: "Custom programming, execution standards, progression, and accountability.",
+    title: "Coaching Application",
+    body: "Structured intake for athletes and high performers ready for serious coaching.",
     cta: "Apply for Coaching",
     href: HTK_APPLICATION_PATH,
     external: false,
-    image: "/htk/field-throw.jpg",
-    meta: "Highest touchpoint"
-  },
-  {
-    title: "Performance Strategy Call",
-    body: "Dial in explosiveness, mobility, endurance, and training direction.",
-    cta: "Schedule Call",
-    href: HTK_BOOKING_URL,
-    external: true,
-    image: "/htk/mirror-conditioning.jpg",
-    meta: "Focused consult"
+    image: "/htk/gym-operator.jpg"
   }
 ];
 
-const differences = [
-  "Not random bodybuilding with a tactical name.",
-  "Not endless conditioning that breaks down movement.",
-  "Not influencer fluff, recycled templates, or hype training.",
-  "Built around output, movement quality, durability, and discipline."
-];
+export default async function HomePage() {
+  const reviews = await listApprovedPublicReviews();
+  const previewReviews = reviews.slice(0, 3);
 
-const processSteps = [
-  {
-    title: "Assess",
-    body: "Identify your current engine, movement limits, power gaps, and real constraints."
-  },
-  {
-    title: "Build",
-    body: "Create the plan around strength, speed, mobility, conditioning, and recovery."
-  },
-  {
-    title: "Execute",
-    body: "Train with clear standards, tracked progress, and work that transfers."
-  },
-  {
-    title: "Upgrade",
-    body: "Adjust the system as your body adapts and your capacity rises."
-  }
-];
-
-const results = [
-  "More explosive first step and repeat sprint ability",
-  "Better endurance without losing athletic power",
-  "Cleaner mobility, stronger positions, and fewer leaks",
-  "A body that carries muscle, speed, and work capacity",
-  "Training confidence under fatigue and pressure",
-  "A sharper standard for discipline outside the gym"
-];
-
-const testimonials = [
-  {
-    name: "Jordan M.",
-    role: "Collegiate athlete",
-    quote: "I move better, recover faster, and perform at a different level now."
-  },
-  {
-    name: "Marcus R.",
-    role: "Tactical athlete",
-    quote: "This is not gym training. This is real performance."
-  },
-  {
-    name: "Alina S.",
-    role: "Former sprinter",
-    quote: "My endurance and explosiveness completely changed."
-  }
-];
-
-const socials = [
-  {
-    label: "YouTube",
-    href: "https://youtube.com/@jimmyHTK",
-    icon: Youtube
-  },
-  {
-    label: "Instagram",
-    href: "https://instagram.com/",
-    icon: Instagram
-  },
-  {
-    label: "X",
-    href: "https://x.com/bynum369963",
-    textIcon: "X"
-  },
-  {
-    label: "TikTok",
-    href: "https://tiktok.com/",
-    textIcon: "TT"
-  },
-  {
-    label: "Email",
-    href: "mailto:bynumj634@gmail.com",
-    icon: Mail
-  }
-];
-
-export default function HomePage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#050505] text-white">
-      <Header />
+      <SiteHeader currentPath="/" />
       <Hero />
-      <Philosophy />
-      <Audience />
-      <Services />
-      <WhyHtk />
-      <About />
-      <Process />
-      <Results />
-      <Testimonials />
-      <Socials />
+      <ValueProp />
+      <ServiceOverview />
+      <ProofPreview reviews={previewReviews} />
       <FinalCta />
-      <Footer />
-      <MobileCta />
+      <SiteFooter />
+      <MobileStickyCta />
     </main>
-  );
-}
-
-function Header() {
-  return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050505]/90 backdrop-blur-xl">
-      <div className="container-px mx-auto flex h-[72px] max-w-7xl items-center justify-between py-4">
-        <Link href="#home" className="flex items-center gap-3" aria-label="HTK Training home">
-          <span className="grid size-10 place-items-center rounded-md border border-red-500/45 bg-red-500/10 text-sm font-black text-white shadow-[0_0_34px_rgba(220,38,38,0.28)]">
-            HTK
-          </span>
-          <span className="leading-none">
-            <span className="block text-base font-black uppercase">HTK</span>
-            <span className="block text-[10px] font-bold uppercase text-white/60">Training</span>
-          </span>
-        </Link>
-        <nav className="hidden items-center gap-7 text-sm font-semibold text-white/60 lg:flex">
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="transition hover:text-white">
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <CtaLink href={HTK_BOOKING_URL} external size="sm">
-          Book Now
-        </CtaLink>
-      </div>
-    </header>
   );
 }
 
 function Hero() {
   return (
-    <section id="home" className="relative isolate border-b border-white/10">
+    <section className="relative isolate overflow-hidden border-b border-white/10">
       <Image
         src="/htk/hero-field-athlete.jpg"
         alt="HTK Training athlete on a football field"
         fill
         priority
         sizes="100vw"
-        className="absolute inset-0 -z-30 object-cover object-[50%_30%] opacity-[0.46] grayscale-[18%]"
+        className="absolute inset-0 -z-30 object-cover object-[50%_24%] opacity-[0.34] grayscale-[14%]"
       />
-      <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,5,5,0.76)_0%,rgba(5,5,5,0.65)_38%,rgba(5,5,5,0.92)_100%)]" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,5,5,0.78)_0%,rgba(5,5,5,0.25)_50%,rgba(5,5,5,0.78)_100%)]" />
-      <div className="container-px mx-auto flex min-h-[calc(100svh-6rem)] max-w-7xl flex-col items-center justify-center py-16 text-center sm:py-20">
-        <Badge>Coaching and consultation intake open</Badge>
-        <h1 className="mt-6 max-w-5xl text-5xl font-black leading-[0.95] text-white sm:text-6xl md:text-7xl lg:text-8xl">
-          Build a Body That Is <span className="text-red-500">Hard to Kill.</span>
-        </h1>
-        <p className="mt-6 max-w-3xl text-base leading-8 text-white/70 sm:text-lg">
-          Explosive, mobile, enduring, resilient, and efficient. HTK Training builds
-          real-world physical dominance for athletes, high performers, and disciplined
-          individuals who refuse soft standards.
-        </p>
-        <div className="mt-9 flex w-full max-w-xl flex-col items-center justify-center gap-3 sm:flex-row">
-          <CtaLink href={HTK_BOOKING_URL} external className="w-full sm:w-auto">
-            Book a Consultation
-          </CtaLink>
-          <CtaLink href={HTK_APPLICATION_PATH} variant="secondary" className="w-full sm:w-auto">
-            Apply for Coaching
-          </CtaLink>
-        </div>
-        <div className="mt-10 grid w-full max-w-4xl grid-cols-2 gap-3 md:grid-cols-4">
-          {trustIndicators.map((indicator) => (
-            <div
-              key={indicator}
-              className="rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-xs font-bold uppercase text-white/70 backdrop-blur"
-            >
-              {indicator}
-            </div>
-          ))}
+      <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,5,5,0.82)_0%,rgba(5,5,5,0.68)_44%,rgba(5,5,5,0.96)_100%)]" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,5,5,0.84)_0%,rgba(5,5,5,0.38)_50%,rgba(5,5,5,0.84)_100%)]" />
+      <div className="container-px mx-auto max-w-7xl py-20 sm:py-24 lg:py-28">
+        <div className="max-w-4xl">
+          <HtkBadge>Coaching and consultations</HtkBadge>
+          <h1 className="mt-6 text-5xl font-black leading-[0.95] text-white sm:text-6xl md:text-7xl">
+            Build a body that is <span className="text-red-500">hard to kill.</span>
+          </h1>
+          <p className="mt-6 max-w-3xl text-base leading-8 text-white/68 sm:text-lg">
+            HTK Training is performance coaching for athletes and disciplined high
+            performers who want explosiveness, endurance, mobility, durability, and a
+            sharper standard of physical capability.
+          </p>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <CtaLink href={HTK_BOOKING_URL} external className="w-full sm:w-auto">
+              Book a Consultation
+            </CtaLink>
+            <CtaLink href="/results" variant="secondary" className="w-full sm:w-auto">
+              View Results
+            </CtaLink>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function Philosophy() {
+function ValueProp() {
   return (
     <section className="border-b border-white/10 bg-[#070707] py-20 md:py-24">
       <div className="container-px mx-auto max-w-7xl">
         <SectionIntro
-          eyebrow="What HTK Training is"
-          title="A disciplined performance system for bodies that have to work."
-          body="HTK is not about looking athletic for one photo. It is about becoming explosive, mobile, enduring, resilient, and capable when conditions are not perfect."
+          eyebrow="HTK standard"
+          title="Clean message. Serious coaching. Better physical output."
+          body="The homepage stays focused. The mission is simple: show what HTK does, prove it works, and move qualified people toward a consultation or coaching application."
         />
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {pillars.map((pillar) => (
-            <FeatureCard key={pillar.title} icon={pillar.icon} title={pillar.title}>
-              {pillar.body}
-            </FeatureCard>
-          ))}
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          {pillars.map((pillar) => {
+            const Icon = pillar.icon;
+
+            return (
+              <article
+                key={pillar.title}
+                className="rounded-lg border border-white/10 bg-white/[0.035] p-6 transition hover:border-red-500/45 hover:bg-red-500/[0.05]"
+              >
+                <div className="mb-8 grid size-12 place-items-center rounded-md border border-red-500/35 bg-red-500/10 text-red-400">
+                  <Icon className="size-5" />
+                </div>
+                <h2 className="text-xl font-black text-white">{pillar.title}</h2>
+                <p className="mt-3 text-sm leading-7 text-white/62">{pillar.body}</p>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
-function Audience() {
+function ServiceOverview() {
   return (
     <section className="border-b border-white/10 bg-[#050505] py-20 md:py-24">
       <div className="container-px mx-auto max-w-7xl">
-        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+        <div className="grid gap-12 lg:grid-cols-[0.84fr_1.16fr] lg:items-start">
           <SectionIntro
+            eyebrow="Start here"
+            title="Two clear paths. Less clutter. Better navigation."
+            body="Use the consultation when you want a direct read on your next move. Use the application when you are ready for a more committed coaching conversation."
             align="left"
-            eyebrow="Who this is for"
-            title="Built for people who train like their body has a job."
-            body="If you want performance that transfers beyond mirrors, machines, and motivation, you are in the right place."
-          />
-          <div className="grid gap-3 sm:grid-cols-2">
-            {audiences.map((item) => (
-              <div
-                key={item}
-                className="group rounded-lg border border-white/10 bg-white/[0.035] p-5 transition hover:border-red-500/50 hover:bg-red-500/[0.06]"
+          >
+            <div className="mt-8">
+              <CtaLink href="/results" variant="secondary">
+                See More Proof
+              </CtaLink>
+            </div>
+          </SectionIntro>
+          <div className="grid gap-5 lg:grid-cols-2">
+            {servicePreview.map((item) => (
+              <article
+                key={item.title}
+                className="group overflow-hidden rounded-lg border border-white/10 bg-[#0d0d0d] shadow-[0_24px_90px_rgba(0,0,0,0.3)] transition hover:-translate-y-1 hover:border-red-500/45"
               >
-                <div className="mb-4 h-1.5 w-10 rounded-sm bg-red-500 shadow-[0_0_22px_rgba(220,38,38,0.5)]" />
-                <p className="text-sm font-semibold leading-6 text-white/80">{item}</p>
-              </div>
+                <div className="relative aspect-[4/3] overflow-hidden border-b border-white/10">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, 100vw"
+                    className="object-cover grayscale-[14%] transition duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.08)_0%,rgba(5,5,5,0.76)_100%)]" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-black text-white">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-white/62">{item.body}</p>
+                  <CtaLink
+                    href={item.href}
+                    external={item.external}
+                    size="card"
+                    className="mt-6"
+                  >
+                    {item.cta}
+                  </CtaLink>
+                </div>
+              </article>
             ))}
           </div>
         </div>
@@ -320,262 +197,53 @@ function Audience() {
   );
 }
 
-function Services() {
+function ProofPreview({
+  reviews
+}: {
+  reviews: Awaited<ReturnType<typeof listApprovedPublicReviews>>;
+}) {
   return (
-    <section id="services" className="border-b border-white/10 bg-[#080808] py-20 md:py-24">
+    <section className="border-b border-white/10 bg-[#080808] py-20 md:py-24">
       <div className="container-px mx-auto max-w-7xl">
-        <SectionIntro
-          eyebrow="Services"
-          title="Choose the entry point that matches your intent."
-          body="Consultations clarify the mission. Coaching builds the body. Every offer is designed around execution, standards, and measurable performance."
-        />
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <SectionIntro
+            eyebrow="Proof"
+            title="Enough social proof to build trust without cramming the homepage."
+            body="The full proof lives on the dedicated results page. This section only previews the standard and gives the next click somewhere intentional to go."
+            align="left"
+          />
+          <CtaLink href="/results" variant="secondary">
+            Explore All Results
+          </CtaLink>
+        </div>
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {services.map((service) => (
+          {reviews.map((review) => (
             <article
-              key={service.title}
-              className="group overflow-hidden rounded-lg border border-white/10 bg-[#0d0d0d] shadow-[0_24px_90px_rgba(0,0,0,0.36)] transition hover:-translate-y-1 hover:border-red-500/50"
+              key={review.id}
+              className="rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.24)]"
             >
-              <div className="relative aspect-[1.1] overflow-hidden border-b border-white/10">
-                <Image
-                  src={service.image}
-                  alt={`${service.title} for HTK Training`}
-                  fill
-                  sizes="(min-width: 1024px) 33vw, 100vw"
-                  className="object-cover grayscale-[16%] transition duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.1)_0%,rgba(5,5,5,0.82)_100%)]" />
-                <span className="absolute left-4 top-4 rounded-md border border-red-500/35 bg-black/60 px-3 py-1.5 text-xs font-black uppercase text-red-200 backdrop-blur">
-                  {service.meta}
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="text-xl font-black text-white">{review.displayName}</p>
+                <span className="rounded-md border border-red-500/35 bg-red-500/[0.08] px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-red-200">
+                  Verified review
                 </span>
               </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-black text-white">{service.title}</h3>
-                <p className="mt-3 min-h-[72px] text-sm leading-6 text-white/60">{service.body}</p>
-                <CtaLink
-                  href={service.href}
-                  external={service.external}
-                  size="card"
-                  className="mt-6 border border-red-500/45 bg-red-500/10 hover:border-red-400"
-                >
-                  {service.cta}
-                </CtaLink>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function WhyHtk() {
-  return (
-    <section className="border-b border-white/10 bg-[#050505] py-20 md:py-24">
-      <div className="container-px mx-auto max-w-7xl">
-        <div className="grid gap-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-          <div>
-            <SectionIntro
-              align="left"
-              eyebrow="Why HTK"
-              title="This is performance coaching, not generic fitness with a hard font."
-              body="The goal is not to entertain you with random pain. The goal is to build a body that expresses force, owns positions, carries work capacity, and stays composed."
-            />
-            <div className="mt-8 space-y-3">
-              {differences.map((item) => (
-                <div
-                  key={item}
-                  className="flex gap-3 rounded-lg border border-white/10 bg-white/[0.035] p-4"
-                >
-                  <BadgeCheck className="mt-0.5 size-5 shrink-0 text-red-500" />
-                  <p className="text-sm leading-6 text-white/70">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="relative overflow-hidden rounded-lg border border-white/10 bg-[#111]">
-            <Image
-              src="/htk/train-for-real-life.png"
-              alt="HTK Training train for real life"
-              width={1376}
-              height={768}
-              className="h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0)_0%,rgba(5,5,5,0.45)_100%)]" />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function About() {
-  return (
-    <section id="about" className="border-b border-white/10 bg-[#080808] py-20 md:py-24">
-      <div className="container-px mx-auto max-w-7xl">
-        <div className="grid gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-            <ImagePanel
-              src="/htk/nmu-football.jpg"
-              alt="Northern Michigan football athlete"
-              label="Northern Michigan football"
-              className="aspect-[4/5]"
-            />
-            <ImagePanel
-              src="/htk/htk-training-01.jpg"
-              alt="Marine Corps background"
-              label="Marine Corps background"
-              className="aspect-[4/3]"
-            />
-          </div>
-          <div>
-            <SectionIntro
-              align="left"
-              eyebrow="Coach credibility"
-              title="Athlete-built. Military-tested. Performance-focused."
-              body="HTK Training comes from lived standards: multi-sport athletics, collegiate football at Northern Michigan, Marine Corps discipline, and a specialization in building athletic bodies that can handle pressure."
-            />
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <StatCard value="Multi-sport" label="Athletic base" />
-              <StatCard value="NMU" label="Collegiate football" />
-              <StatCard value="USMC" label="Marine Corps background" />
-              <StatCard value="HTK" label="Performance system" />
-            </div>
-            <div className="mt-8 rounded-lg border border-red-500/25 bg-red-500/[0.055] p-6">
-              <p className="text-lg font-black text-white">The standard is simple.</p>
-              <p className="mt-3 text-sm leading-7 text-white/70">
-                Move well. Hit hard. Last longer. Recover smarter. Repeat the work
-                until performance becomes identity.
+              <p className="mt-2 text-sm text-white/50">{review.athleteType}</p>
+              <p className="mt-6 text-lg font-black leading-8 text-white">
+                {`"${review.testimonialQuote}"`}
               </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Process() {
-  return (
-    <section id="process" className="border-b border-white/10 bg-[#050505] py-20 md:py-24">
-      <div className="container-px mx-auto max-w-7xl">
-        <SectionIntro
-          eyebrow="Process"
-          title="A simple system for serious execution."
-          body="No bloated course library. No guessing. Every step exists to create a stronger, faster, more capable body."
-        />
-        <div className="mt-12 grid gap-4 md:grid-cols-4">
-          {processSteps.map((step, index) => (
-            <article key={step.title} className="rounded-lg border border-white/10 bg-white/[0.035] p-6">
-              <div className="mb-8 flex items-center justify-between">
-                <span className="text-sm font-black text-red-400">0{index + 1}</span>
-                <Target className="size-5 text-white/40" />
-              </div>
-              <h3 className="text-xl font-black text-white">{step.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-white/60">{step.body}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Results() {
-  return (
-    <section id="results" className="border-b border-white/10 bg-[#080808] py-20 md:py-24">
-      <div className="container-px mx-auto max-w-7xl">
-        <div className="grid gap-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-          <div>
-            <SectionIntro
-              align="left"
-              eyebrow="Results"
-              title="Train for the kind of body people can feel in the room."
-              body="The outcome is not only aesthetics. It is movement, output, pressure tolerance, and the confidence that comes from earned capability."
-            />
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
-              {results.map((result) => (
-                <div key={result} className="flex gap-3 rounded-lg border border-white/10 bg-[#0d0d0d] p-4">
-                  <span className="mt-2 h-1.5 w-8 shrink-0 rounded-sm bg-red-500 shadow-[0_0_18px_rgba(220,38,38,0.48)]" />
-                  <p className="text-sm font-semibold leading-6 text-white/75">{result}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <ImagePanel
-            src="/htk/gym-operator.jpg"
-            alt="HTK Training athlete in a performance setting"
-            label="Pressure-ready performance"
-            className="aspect-[4/5]"
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Testimonials() {
-  return (
-    <section className="border-b border-white/10 bg-[#050505] py-20 md:py-24">
-      <div className="container-px mx-auto max-w-7xl">
-        <SectionIntro
-          eyebrow="Testimonials"
-          title="Proof should sound like performance."
-          body="Real coaching is measured by better output, cleaner movement, stronger endurance, and a higher standard of execution."
-        />
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {testimonials.map((testimonial) => (
-            <article
-              key={testimonial.name}
-              className="rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.28)]"
-            >
-              <RatingPips />
-              <p className="mt-7 text-xl font-black leading-8 text-white">
-                {`"${testimonial.quote}"`}
-              </p>
-              <div className="mt-8 border-t border-white/10 pt-5">
-                <p className="font-black text-white">{testimonial.name}</p>
-                <p className="mt-1 text-sm text-white/50">{testimonial.role}</p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {review.resultTags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-md border border-white/10 bg-[#050505] px-3 py-1 text-[11px] font-black uppercase tracking-wide text-white/64"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
             </article>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Socials() {
-  return (
-    <section id="contact" className="border-b border-white/10 bg-[#080808] py-16 md:py-20">
-      <div className="container-px mx-auto max-w-7xl">
-        <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-          <SectionIntro
-            align="left"
-            eyebrow="Channels"
-            title="Join the HTK ecosystem."
-            body="Follow the training standard, watch the work, and start the conversation when you are ready to move."
-          />
-          <div className="grid gap-3 sm:grid-cols-5">
-            {socials.map((social) => {
-              const Icon = social.icon;
-              return (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target={social.href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel={social.href.startsWith("mailto:") ? undefined : "noreferrer"}
-                  className="group flex min-h-28 flex-col items-center justify-center gap-3 rounded-lg border border-white/10 bg-white/[0.035] text-center transition hover:border-red-500/50 hover:bg-red-500/[0.08]"
-                >
-                  <span className="grid size-11 place-items-center rounded-md border border-red-500/35 bg-red-500/10 text-sm font-black text-white shadow-[0_0_26px_rgba(220,38,38,0.18)]">
-                    {Icon ? <Icon className="size-5" /> : social.textIcon}
-                  </span>
-                  <span className="text-sm font-black text-white/80 group-hover:text-white">
-                    {social.label}
-                  </span>
-                </a>
-              );
-            })}
-          </div>
         </div>
       </div>
     </section>
@@ -587,20 +255,20 @@ function FinalCta() {
     <section className="relative isolate overflow-hidden border-b border-white/10 bg-[#050505] py-20 md:py-28">
       <Image
         src="/htk/train-for-real-life.png"
-        alt="HTK Training visual"
+        alt="HTK Training final CTA"
         fill
         sizes="100vw"
-        className="absolute inset-0 -z-30 object-cover opacity-[0.28] grayscale-[12%]"
+        className="absolute inset-0 -z-30 object-cover opacity-[0.22] grayscale-[12%]"
       />
-      <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,5,5,0.82)_0%,rgba(5,5,5,0.7)_44%,rgba(5,5,5,0.94)_100%)]" />
+      <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,5,5,0.84)_0%,rgba(5,5,5,0.7)_44%,rgba(5,5,5,0.96)_100%)]" />
       <div className="container-px mx-auto max-w-5xl text-center">
-        <Badge>Hard to Kill starts with a decision</Badge>
+        <HtkBadge>Take the next step</HtkBadge>
         <h2 className="mt-6 text-4xl font-black leading-tight text-white sm:text-5xl md:text-6xl">
-          Stop training around the standard. Become the standard.
+          Book the call. Get clear. Start training with intent.
         </h2>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/70">
-          Book the consultation, apply for coaching, and get a clear path toward
-          explosiveness, endurance, mobility, and real-world capability.
+          HTK is built for people who want structure, proof, and a body that performs when
+          it counts.
         </p>
         <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <CtaLink href={HTK_BOOKING_URL} external className="w-full sm:w-auto">
@@ -612,135 +280,5 @@ function FinalCta() {
         </div>
       </div>
     </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="bg-[#050505] py-8 pb-24 md:pb-8">
-      <div className="container-px mx-auto flex max-w-7xl flex-col gap-4 text-sm text-white/40 sm:flex-row sm:items-center sm:justify-between">
-        <p className="font-semibold text-white/60">HTK Training</p>
-        <p>Hard to Kill Training. Built for real-world performance.</p>
-      </div>
-    </footer>
-  );
-}
-
-function MobileCta() {
-  return (
-    <div className="fixed inset-x-3 bottom-3 z-50 grid grid-cols-2 gap-2 border border-white/10 bg-[#070707]/90 p-2 shadow-[0_0_40px_rgba(0,0,0,0.55)] backdrop-blur md:hidden">
-      <a
-        href={HTK_BOOKING_URL}
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex min-h-12 items-center justify-center rounded-md bg-red-500 px-4 text-sm font-black text-white shadow-[0_0_30px_rgba(220,38,38,0.35)]"
-      >
-        Book
-      </a>
-      <Link
-        href={HTK_APPLICATION_PATH}
-        className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/20 px-4 text-sm font-black text-white"
-      >
-        Apply
-      </Link>
-    </div>
-  );
-}
-
-function SectionIntro({
-  eyebrow,
-  title,
-  body,
-  align = "center"
-}: {
-  eyebrow: string;
-  title: string;
-  body: string;
-  align?: "center" | "left";
-}) {
-  return (
-    <div className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
-      <p className="text-sm font-black uppercase text-red-400">{eyebrow}</p>
-      <h2 className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl md:text-5xl">
-        {title}
-      </h2>
-      <p className="mt-5 text-base leading-8 text-white/60">{body}</p>
-    </div>
-  );
-}
-
-function FeatureCard({
-  icon: Icon,
-  title,
-  children
-}: {
-  icon: LucideIcon;
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <article className="rounded-lg border border-white/10 bg-white/[0.035] p-6 transition hover:border-red-500/50 hover:bg-red-500/[0.055]">
-      <div className="mb-8 grid size-12 place-items-center rounded-md border border-red-500/35 bg-red-500/10 text-red-400">
-        <Icon className="size-5" />
-      </div>
-      <h3 className="text-xl font-black text-white">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-white/60">{children}</p>
-    </article>
-  );
-}
-
-function ImagePanel({
-  src,
-  alt,
-  label,
-  className = "aspect-[4/5]"
-}: {
-  src: string;
-  alt: string;
-  label: string;
-  className?: string;
-}) {
-  return (
-    <div className={`relative overflow-hidden rounded-lg border border-white/10 bg-[#111] ${className}`}>
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        sizes="(min-width: 1024px) 45vw, 100vw"
-        className="object-cover grayscale-[10%]"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0)_0%,rgba(5,5,5,0.78)_100%)]" />
-      <div className="absolute bottom-4 left-4 right-4 rounded-md border border-white/10 bg-black/60 px-4 py-3 text-sm font-black uppercase text-white/80 backdrop-blur">
-        {label}
-      </div>
-    </div>
-  );
-}
-
-function StatCard({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.035] p-5">
-      <p className="text-2xl font-black text-white">{value}</p>
-      <p className="mt-2 text-sm font-semibold text-white/50">{label}</p>
-    </div>
-  );
-}
-
-function RatingPips() {
-  return (
-    <div className="flex gap-1.5" aria-label="Five credibility markers">
-      {Array.from({ length: 5 }).map((_, index) => (
-        <span key={index} className="h-2 w-7 rounded-sm bg-red-500 shadow-[0_0_16px_rgba(220,38,38,0.42)]" />
-      ))}
-    </div>
-  );
-}
-
-function Badge({ children }: { children: ReactNode }) {
-  return (
-    <div className="inline-flex items-center rounded-md border border-white/10 bg-white/[0.055] px-4 py-2 text-xs font-black uppercase text-white/70 shadow-[0_0_36px_rgba(220,38,38,0.12)] backdrop-blur">
-      <Dumbbell className="mr-2 size-4 text-red-400" />
-      {children}
-    </div>
   );
 }

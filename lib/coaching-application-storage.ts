@@ -2,7 +2,13 @@ import { randomUUID } from "node:crypto";
 import { mkdir, appendFile, readFile } from "node:fs/promises";
 import path from "node:path";
 import type { CoachingApplicationPayload } from "@/lib/coaching-application";
-import { getSupabaseAdmin, hasSupabaseConfig } from "@/lib/supabase";
+import {
+  formatSupabaseError,
+  getSupabaseAdmin,
+  hasSupabaseConfig,
+  logSupabaseError,
+  shouldAllowLocalFileFallback
+} from "@/lib/supabase";
 
 export type StoredCoachingApplication = {
   id: string;
@@ -31,21 +37,13 @@ const localApplicationsPath = path.join(
   "coaching-applications.ndjson"
 );
 
-function getErrorMessage(error: unknown) {
-  if (error instanceof Error) {
-    return error.message;
+function getSupabaseConfigIssue() {
+  try {
+    getSupabaseAdmin();
+    return "Supabase configuration check failed.";
+  } catch (error) {
+    return formatSupabaseError(error);
   }
-
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "message" in error &&
-    typeof (error as { message?: unknown }).message === "string"
-  ) {
-    return (error as { message: string }).message;
-  }
-
-  return "Supabase request failed.";
 }
 
 function mapPayloadToStored(
@@ -122,9 +120,13 @@ async function saveToSupabase(
     throw error;
   }
 
-  await supabase
+  const { error: leadsError } = await supabase
     .from("leads")
     .upsert({ email: payload.email, source: "coaching_application" }, { onConflict: "email" });
+
+  if (leadsError) {
+    logSupabaseError("coaching-applications.leads-upsert", leadsError);
+  }
 
   return mapPayloadToStored(payload, {
     id: data.id,
@@ -170,11 +172,19 @@ export async function saveCoachingApplication(
     try {
       return await saveToSupabase(payload);
     } catch (error) {
-      console.error(
-        `[coaching-applications] Supabase save failed, using local fallback: ${getErrorMessage(error)}`
-      );
-      return saveLocally(payload);
+      const message = logSupabaseError("coaching-applications.save", error);
+
+      if (!shouldAllowLocalFileFallback()) {
+        throw new Error(message);
+      }
+
+      console.error("[coaching-applications.save] Falling back to local file storage.");
+      return await saveLocally(payload);
     }
+  }
+
+  if (!shouldAllowLocalFileFallback()) {
+    throw new Error(getSupabaseConfigIssue());
   }
 
   return saveLocally(payload);
@@ -195,16 +205,34 @@ export async function listCoachingApplicationsWithSource(): Promise<CoachingAppl
         fallback: false
       };
     } catch (error) {
-      console.error(
-        `[coaching-applications] Supabase read failed, using local fallback: ${getErrorMessage(error)}`
-      );
+      const issue = logSupabaseError("coaching-applications.list", error);
+
+      if (!shouldAllowLocalFileFallback()) {
+        return {
+          applications: [],
+          source: "supabase",
+          fallback: false,
+          issue
+        };
+      }
+
+      console.error("[coaching-applications.list] Falling back to local file storage.");
       return {
         applications: await listLocalApplications(),
         source: "local_file",
         fallback: true,
-        issue: getErrorMessage(error)
+        issue
       };
     }
+  }
+
+  if (!shouldAllowLocalFileFallback()) {
+    return {
+      applications: [],
+      source: "supabase",
+      fallback: false,
+      issue: getSupabaseConfigIssue()
+    };
   }
 
   return {
@@ -215,6 +243,10 @@ export async function listCoachingApplicationsWithSource(): Promise<CoachingAppl
 }
 
 export function getCoachingApplicationStorageMode() {
+  if (!shouldAllowLocalFileFallback()) {
+    return "supabase_required";
+  }
+
   return hasSupabaseConfig() ? "supabase_with_local_fallback" : "local_file";
 }
 
