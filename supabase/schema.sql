@@ -48,41 +48,6 @@ create table if not exists reviews (
   created_at timestamptz not null default now()
 );
 
-create table if not exists review_submissions (
-  id uuid primary key default uuid_generate_v4(),
-  full_name text not null,
-  display_name text not null,
-  email text not null,
-  athlete_type text not null,
-  training_with_htk text not null,
-  challenge_before text not null,
-  result_improvement text not null,
-  testimonial_quote text not null,
-  rating int check (rating between 1 and 5),
-  public_permission boolean not null default false,
-  wants_video_testimonial boolean not null default false,
-  media_url text,
-  media_label text,
-  status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
-  featured boolean not null default false,
-  result_tags text[] not null default '{}',
-  source text not null default 'submit_review',
-  created_at timestamptz not null default now()
-);
-
-create index if not exists review_submissions_created_at_idx
-  on review_submissions (created_at desc);
-
-create index if not exists review_submissions_status_idx
-  on review_submissions (status);
-
-create index if not exists review_submissions_featured_idx
-  on review_submissions (featured desc, created_at desc);
-
-insert into storage.buckets (id, name, public)
-values ('review-assets', 'review-assets', true)
-on conflict (id) do nothing;
-
 create table if not exists lesson_progress (
   id uuid primary key default uuid_generate_v4(),
   clerk_user_id text not null,

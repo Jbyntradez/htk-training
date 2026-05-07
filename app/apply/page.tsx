@@ -1,11 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
-import { ShieldCheck, Timer, Zap } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Timer, Zap } from "lucide-react";
 import { CoachingApplicationForm } from "@/components/CoachingApplicationForm";
-import { HtkBadge } from "@/components/htk/HtkBadge";
-import { MobileStickyCta } from "@/components/htk/MobileStickyCta";
-import { SiteFooter } from "@/components/htk/SiteFooter";
-import { SiteHeader } from "@/components/htk/SiteHeader";
 import { CtaLink } from "@/components/htk/CtaLink";
 import { HTK_BOOKING_URL } from "@/lib/htk-config";
 
@@ -36,7 +33,31 @@ const standards = [
 export default function ApplyPage() {
   return (
     <main className="min-h-screen bg-[#050505] text-white">
-      <SiteHeader currentPath="/apply" />
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#050505]/90 backdrop-blur-xl">
+        <div className="container-px mx-auto flex h-[72px] max-w-7xl items-center justify-between py-4">
+          <Link href="/" className="flex items-center gap-3" aria-label="HTK Training home">
+            <span className="grid size-10 place-items-center rounded-md border border-red-500/45 bg-red-500/10 text-sm font-black text-white shadow-[0_0_34px_rgba(220,38,38,0.28)]">
+              HTK
+            </span>
+            <span className="leading-none">
+              <span className="block text-base font-black uppercase">HTK</span>
+              <span className="block text-[10px] font-bold uppercase text-white/60">Training</span>
+            </span>
+          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="hidden items-center gap-2 text-sm font-semibold text-white/60 transition hover:text-white sm:inline-flex"
+            >
+              <ArrowLeft className="size-4" />
+              Back
+            </Link>
+            <CtaLink href={HTK_BOOKING_URL} external size="sm">
+              Book Now
+            </CtaLink>
+          </div>
+        </div>
+      </header>
 
       <section className="relative isolate overflow-hidden border-b border-white/10">
         <Image
@@ -50,7 +71,7 @@ export default function ApplyPage() {
         <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,5,5,0.74)_0%,rgba(5,5,5,0.9)_100%)]" />
         <div className="container-px mx-auto max-w-7xl py-16 md:py-20">
           <div className="max-w-3xl">
-            <HtkBadge>HTK coaching intake</HtkBadge>
+            <p className="text-sm font-black uppercase text-red-400">HTK coaching intake</p>
             <h1 className="mt-4 text-4xl font-black leading-tight text-white sm:text-5xl md:text-6xl">
               Apply for coaching with intent.
             </h1>
@@ -116,9 +137,6 @@ export default function ApplyPage() {
           </aside>
         </div>
       </section>
-
-      <SiteFooter />
-      <MobileStickyCta />
     </main>
   );
 }

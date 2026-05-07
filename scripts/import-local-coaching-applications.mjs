@@ -50,18 +50,18 @@ async function loadEnvFromFile(fileName) {
 }
 
 function getSupabaseConfig() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !serviceKey) {
     throw new Error(
-      "Missing Supabase env vars. Set NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL, plus SUPABASE_SERVICE_ROLE_KEY."
+      "Missing Supabase env vars. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY first."
     );
   }
 
   if (!/^https?:\/\//.test(url) || serviceKey.split(".").length !== 3) {
     throw new Error(
-      "Invalid Supabase env vars. NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL must be the project URL and SUPABASE_SERVICE_ROLE_KEY must be the service role JWT."
+      "Invalid Supabase env vars. NEXT_PUBLIC_SUPABASE_URL must be the project URL and SUPABASE_SERVICE_ROLE_KEY must be the service role JWT."
     );
   }
 

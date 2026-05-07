@@ -9,8 +9,6 @@ coverage
 .env.local
 .env*.local
 
-public/review-uploads
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { formatSupabaseError, getSupabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   const stripe = getStripe();
@@ -26,26 +26,17 @@ export async function POST(request: Request) {
     const clerkUserId = session.client_reference_id ?? session.metadata?.clerkUserId;
 
     if (clerkUserId) {
-      try {
-        const supabase = getSupabaseAdmin();
-        const { error } = await supabase.from("profiles").upsert(
-          {
-            clerk_user_id: clerkUserId,
-            email: session.customer_details?.email,
-            has_access: true,
-            stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
-            updated_at: new Date().toISOString()
-          },
-          { onConflict: "clerk_user_id" }
-        );
-
-        if (error) {
-          console.error(`[stripe-webhook] Supabase profile upsert failed: ${formatSupabaseError(error)}`);
-          return NextResponse.json({ error: formatSupabaseError(error) }, { status: 500 });
-        }
-      } catch (error) {
-        return NextResponse.json({ error: formatSupabaseError(error) }, { status: 500 });
-      }
+      const supabase = getSupabaseAdmin();
+      await supabase.from("profiles").upsert(
+        {
+          clerk_user_id: clerkUserId,
+          email: session.customer_details?.email,
+          has_access: true,
+          stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
+          updated_at: new Date().toISOString()
+        },
+        { onConflict: "clerk_user_id" }
+      );
     }
   }
 
