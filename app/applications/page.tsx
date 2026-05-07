@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { requireAdminAuth } from "@/lib/admin-auth";
 import { getCoachingApplicationNotificationStatus } from "@/lib/coaching-application-notifications";
 import {
   getCoachingApplicationStorageMode,
@@ -16,6 +17,8 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ApplicationsPage() {
+  await requireAdminAuth();
+
   const result = await listCoachingApplicationsWithSource();
   const storageMode = getCoachingApplicationStorageMode();
   const notification = getCoachingApplicationNotificationStatus();
@@ -28,7 +31,17 @@ export default async function ApplicationsPage() {
             <ArrowLeft className="size-4" />
             Back to site
           </Link>
-          <span className="text-sm font-black uppercase text-red-400">Application Review</span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-black uppercase text-red-400">Application Review</span>
+            <form action="/api/admin/logout" method="post">
+              <button
+                type="submit"
+                className="inline-flex min-h-10 items-center justify-center rounded-md border border-white/10 bg-white/[0.04] px-4 text-xs font-black uppercase tracking-wide text-white/72 transition hover:border-red-500/35 hover:text-white"
+              >
+                Log out
+              </button>
+            </form>
+          </div>
         </div>
       </header>
 

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { formatSupabaseError } from "@/lib/supabase";
 import {
   validateCoachingApplicationPayload
@@ -13,6 +14,10 @@ import {
 } from "@/lib/coaching-application-storage";
 
 export async function GET() {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const result = await listCoachingApplicationsWithSource();
 
