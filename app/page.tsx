@@ -23,7 +23,9 @@ const navItems = [
   { label: "About", href: "#about" },
   { label: "Process", href: "#process" },
   { label: "Results", href: "#results" },
-  { label: "Contact", href: "#contact" }
+  { label: "Contact", href: "#contact" },
+  { label: "Privacy", href: "/privacy-policy" },
+  { label: "Terms", href: "/terms-of-service" }
 ];
 
 const trustIndicators = [
@@ -210,7 +212,7 @@ function Header() {
             <span className="block text-[10px] font-bold uppercase text-white/60">Training</span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-7 text-sm font-semibold text-white/60 lg:flex">
+        <nav className="hidden items-center gap-4 text-[13px] font-semibold text-white/60 xl:gap-6 xl:text-sm lg:flex">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className="transition hover:text-white">
               {item.label}
@@ -618,9 +620,19 @@ function FinalCta() {
 function Footer() {
   return (
     <footer className="bg-[#050505] py-8 pb-24 md:pb-8">
-      <div className="container-px mx-auto flex max-w-7xl flex-col gap-4 text-sm text-white/40 sm:flex-row sm:items-center sm:justify-between">
-        <p className="font-semibold text-white/60">HTK Training</p>
-        <p>Hard to Kill Training. Built for real-world performance.</p>
+      <div className="container-px mx-auto flex max-w-7xl flex-col gap-5 text-sm text-white/40 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p className="font-semibold text-white/60">HTK Training</p>
+          <p className="mt-2">Hard to Kill Training. Built for real-world performance.</p>
+        </div>
+        <div className="flex flex-wrap gap-x-5 gap-y-2 text-white/55">
+          <Link href="/privacy-policy" className="transition hover:text-white">
+            Privacy Policy
+          </Link>
+          <Link href="/terms-of-service" className="transition hover:text-white">
+            Terms of Service
+          </Link>
+        </div>
       </div>
     </footer>
   );
