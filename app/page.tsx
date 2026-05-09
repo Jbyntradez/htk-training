@@ -23,6 +23,7 @@ const navItems = [
   { label: "About", href: "#about" },
   { label: "Process", href: "#process" },
   { label: "Results", href: "#results" },
+  { label: "Free Resources", href: "/free-resources" },
   { label: "Contact", href: "#contact" },
   { label: "Privacy", href: "/privacy-policy" },
   { label: "Terms", href: "/terms-of-service" }
@@ -626,6 +627,9 @@ function Footer() {
           <p className="mt-2">Hard to Kill Training. Built for real-world performance.</p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2 text-white/55">
+          <Link href="/free-resources" className="transition hover:text-white">
+            Free Resources
+          </Link>
           <Link href="/privacy-policy" className="transition hover:text-white">
             Privacy Policy
           </Link>

@@ -12,6 +12,7 @@ type LegalSection = {
 
 const legalNavItems = [
   { label: "Home", href: "/" },
+  { label: "Free Resources", href: "/free-resources" },
   { label: "Apply", href: HTK_APPLICATION_PATH },
   { label: "Privacy", href: "/privacy-policy" },
   { label: "Terms", href: "/terms-of-service" }

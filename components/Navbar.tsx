@@ -12,6 +12,7 @@ export function Navbar() {
           <Link href="/product" className="hover:text-accent">Playbook</Link>
           <Link href="/#proof" className="hover:text-accent">Results</Link>
           <Link href="/#system" className="hover:text-accent">System</Link>
+          <Link href="/free-resources" className="hover:text-accent">Free Resources</Link>
         </nav>
         <div className="flex items-center gap-3">
           <ButtonLink href="/dashboard" variant="ghost" className="hidden sm:inline-flex">Preview</ButtonLink>

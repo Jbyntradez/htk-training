@@ -7,6 +7,7 @@ export function Footer() {
         <p>© {new Date().getFullYear()} Hard to Kill Training. Built for disciplined execution.</p>
         <div className="flex gap-5">
           <Link href="/product" className="hover:text-accent">Product</Link>
+          <Link href="/free-resources" className="hover:text-accent">Free Resources</Link>
           <Link href="/privacy-policy" className="hover:text-accent">Privacy</Link>
           <Link href="/terms-of-service" className="hover:text-accent">Terms</Link>
           <Link href="/login" className="hover:text-accent">Login</Link>
