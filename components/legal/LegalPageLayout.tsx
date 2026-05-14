@@ -273,6 +273,18 @@ function LegalFooter() {
             >
               Book a Consultation
             </a>
+            <a
+              href="mailto:contact@htktrainingco.com"
+              className="transition hover:text-white"
+            >
+              Contact
+            </a>
+            <a
+              href="mailto:support@htktrainingco.com"
+              className="transition hover:text-white"
+            >
+              Support
+            </a>
             <Link href={HTK_APPLICATION_PATH} className="transition hover:text-white">
               Apply for Coaching
             </Link>

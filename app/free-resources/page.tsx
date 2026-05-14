@@ -223,6 +223,12 @@ function Footer() {
           <Link href="/terms-of-service" className="transition hover:text-white">
             Terms of Service
           </Link>
+          <a href="mailto:contact@htktrainingco.com" className="transition hover:text-white">
+            Contact
+          </a>
+          <a href="mailto:support@htktrainingco.com" className="transition hover:text-white">
+            Support
+          </a>
         </div>
       </div>
     </footer>

@@ -10,6 +10,8 @@ export function Footer() {
           <Link href="/free-resources" className="hover:text-accent">Free Resources</Link>
           <Link href="/privacy-policy" className="hover:text-accent">Privacy</Link>
           <Link href="/terms-of-service" className="hover:text-accent">Terms</Link>
+          <a href="mailto:contact@htktrainingco.com" className="hover:text-accent">Contact</a>
+          <a href="mailto:support@htktrainingco.com" className="hover:text-accent">Support</a>
           <Link href="/login" className="hover:text-accent">Login</Link>
           <Link href="/signup" className="hover:text-accent">Signup</Link>
         </div>
