@@ -19,11 +19,12 @@ function getSupabaseConfig() {
   }
 
   const looksLikeUrl = /^https?:\/\//.test(url);
-  const looksLikeJwt = serviceKey.split(".").length === 3;
+  const looksLikeLegacyJwt = serviceKey.split(".").length === 3;
+  const looksLikeSecretKey = serviceKey.startsWith("sb_secret_");
 
-  if (!looksLikeUrl || !looksLikeJwt) {
+  if (!looksLikeUrl || (!looksLikeLegacyJwt && !looksLikeSecretKey)) {
     throw new Error(
-      "Invalid Supabase environment variables. NEXT_PUBLIC_SUPABASE_URL should be the project URL and SUPABASE_SERVICE_ROLE_KEY should be the service role JWT."
+      "Invalid Supabase environment variables. NEXT_PUBLIC_SUPABASE_URL should be the project URL and SUPABASE_SERVICE_ROLE_KEY should be a Supabase secret key or legacy service role JWT."
     );
   }
 

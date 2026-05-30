@@ -1,5 +1,8 @@
 import Stripe from "stripe";
 
+export const HTK_MEMBERSHIP_PRICE_ID =
+  process.env.STRIPE_MEMBERSHIP_PRICE_ID ?? "price_1TcFTxKBfTFeKbeESvDoYM7O";
+
 export function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
 
