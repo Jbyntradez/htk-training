@@ -79,7 +79,7 @@ export function SupabaseSignupForm() {
       </label>
       {message ? <p className="text-sm leading-6 text-red-300">{message}</p> : null}
       <Button type="submit" disabled={loading} className="w-full">
-        {loading ? "Creating Account" : "Create Account"}
+        {loading ? "Starting Membership" : "Start Membership"}
       </Button>
       <ButtonLink href="/login" variant="ghost" className="w-full">
         Already Have Access

@@ -261,7 +261,7 @@ export function AthleteOnboardingForm() {
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href="/login" className="w-full sm:w-auto">Sign In</ButtonLink>
-            <ButtonLink href="/signup" variant="outline" className="w-full sm:w-auto">Create Account</ButtonLink>
+            <ButtonLink href="/signup" variant="outline" className="w-full sm:w-auto">Start Membership</ButtonLink>
           </div>
         </div>
       </OnboardingShell>
