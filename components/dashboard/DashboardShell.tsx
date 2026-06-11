@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
+import { UserIdentityBadge, ViewStatusBadge, type ViewStatus } from "@/components/dashboard/UserIdentityBadge";
 import { mockUser } from "@/lib/access";
 
 type DashboardShellUser = {
@@ -10,11 +11,13 @@ type DashboardShellUser = {
 export function DashboardShell({
   children,
   user = mockUser,
-  userAction
+  userAction,
+  view = "athlete"
 }: {
   children: React.ReactNode;
   user?: DashboardShellUser;
   userAction?: React.ReactNode;
+  view?: ViewStatus;
 }) {
   return (
     <div className="min-h-screen bg-background">
@@ -26,16 +29,9 @@ export function DashboardShell({
             <p className="mt-1 hidden text-sm text-htk-muted sm:block">HTK performance operating system</p>
           </div>
           <div className="flex items-center gap-3">
+            <ViewStatusBadge view={view} />
             {userAction}
-            <div className="flex items-center gap-3 rounded-md border border-white/10 bg-black/35 px-3 py-2">
-              <div className="grid h-8 w-8 place-items-center rounded-md bg-htk-red text-xs font-black text-white">
-                {user.initials}
-              </div>
-              <div className="hidden text-right sm:block">
-                <p className="text-sm font-black">{user.name}</p>
-                <p className="text-xs text-htk-muted">{user.email ?? "HTK operator"}</p>
-              </div>
-            </div>
+            <UserIdentityBadge user={user} />
           </div>
         </div>
         <div className="container-px mx-auto max-w-6xl py-8 md:py-12">

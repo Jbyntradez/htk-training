@@ -94,4 +94,22 @@ body {
   .htk-empty-state {
     @apply rounded-md border border-htk-red/25 bg-htk-red/[0.07];
   }
+
+  .htk-microcopy-panel {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.25rem);
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease,
+      visibility 160ms ease;
+  }
+
+  .htk-microcopy:hover .htk-microcopy-panel,
+  .htk-microcopy:focus-within .htk-microcopy-panel,
+  .htk-microcopy[open] .htk-microcopy-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
 }

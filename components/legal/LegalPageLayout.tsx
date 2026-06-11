@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronRight, FileText, Mail, ShieldCheck, Scale } from "lucide-react";
-import { CtaLink } from "@/components/htk/CtaLink";
+import { MarketingNav } from "@/components/marketing/MarketingNav";
 import { HTK_APPLICATION_PATH, HTK_BOOKING_URL } from "@/lib/htk-config";
 
 type LegalSection = {
@@ -115,35 +115,7 @@ function LegalHeader({
 }: {
   activePath: "/privacy-policy" | "/terms-of-service";
 }) {
-  return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050505]/90 backdrop-blur-xl">
-      <div className="container-px mx-auto flex h-[72px] max-w-7xl items-center justify-between py-4">
-        <Link href="/" className="flex items-center gap-3" aria-label="HTK Training home">
-          <span className="grid size-10 place-items-center rounded-md border border-red-500/45 bg-red-500/10 text-sm font-black text-white shadow-[0_0_34px_rgba(220,38,38,0.28)]">
-            HTK
-          </span>
-          <span className="leading-none">
-            <span className="block text-base font-black uppercase">HTK</span>
-            <span className="block text-[10px] font-bold uppercase text-white/60">Training</span>
-          </span>
-        </Link>
-        <nav className="hidden items-center gap-4 text-[13px] font-semibold text-white/60 xl:gap-6 xl:text-sm lg:flex">
-          {legalNavItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`transition hover:text-white ${activePath === item.href ? "text-white" : ""}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <CtaLink href={HTK_BOOKING_URL} external size="sm">
-          Book Now
-        </CtaLink>
-      </div>
-    </header>
-  );
+  return <MarketingNav activeHref={activePath} />;
 }
 
 function Hero({

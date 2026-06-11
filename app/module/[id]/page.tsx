@@ -22,14 +22,14 @@ export default async function ModuleDetailPage({ params }: { params: Promise<{ i
     notFound();
   }
 
-  const { completedLessons } = await getAccessState();
+  const { user, completedLessons } = await getAccessState();
 
   return (
-    <DashboardShell>
+    <DashboardShell user={user}>
       <article>
         <Link
           href="/modules"
-          className="mb-5 inline-flex items-center gap-2 rounded-md border border-htk-red/35 bg-black/30 px-3 py-2 text-xs font-black uppercase text-accent/75 transition hover:border-htk-red hover:bg-htk-red/10 hover:text-white"
+          className="mb-5 inline-flex items-center gap-2 rounded-md border border-htk-red/35 bg-black/30 px-3 py-2 text-xs font-black uppercase text-accent/75 transition hover:border-htk-red hover:bg-htk-red/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-htk-red focus:ring-offset-2 focus:ring-offset-background"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Modules

@@ -6,10 +6,10 @@ import { modules } from "@/lib/content";
 import { getAccessState } from "@/lib/access";
 
 export default async function ModulesPage() {
-  const { hasAccess, completedLessons } = await getAccessState();
+  const { user, hasAccess, completedLessons } = await getAccessState();
 
   return (
-    <DashboardShell>
+    <DashboardShell user={user}>
       <div className="htk-panel overflow-hidden p-6 md:p-8">
         <div className="htk-red-rule" />
         <p className="htk-kicker mt-5">HTK training modules</p>
@@ -24,51 +24,65 @@ export default async function ModulesPage() {
           <PathCard
             icon={<Dumbbell className="h-5 w-5" />}
             title="Browse Exercises"
+            href="#module-library"
             copy="Review cues, mistakes, modifications, safety notes, and video placeholders."
           />
           <PathCard
             icon={<ListChecks className="h-5 w-5" />}
             title="Preset Workouts"
+            href="#module-library"
             copy="Use ready-built HTK sessions for focused, disciplined execution."
           />
           <PathCard
             icon={<SlidersHorizontal className="h-5 w-5" />}
             title="Build Custom Workout"
+            href="#module-library"
             copy="Filter by goal, body area, equipment, difficulty, duration, and pattern."
           />
         </div>
       </div>
 
-      <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="htk-kicker">Module library</p>
-          <h2 className="htk-section-title mt-2">Select a training focus</h2>
+      <section
+        id="module-library"
+        tabIndex={-1}
+        className="mt-10 scroll-mt-24 focus:outline-none focus:ring-2 focus:ring-htk-red focus:ring-offset-2 focus:ring-offset-background"
+      >
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="htk-kicker">Module library</p>
+            <h2 className="htk-section-title mt-2">Select a training focus</h2>
+          </div>
+          <p className="max-w-xl text-sm leading-6 text-htk-muted">
+            Move well. Hit hard. Last longer. Recover smarter. Each module stays focused on the work that belongs there.
+          </p>
         </div>
-        <p className="max-w-xl text-sm leading-6 text-htk-muted">
-          Move well. Hit hard. Last longer. Recover smarter. Each module stays focused on the work that belongs there.
-        </p>
-      </div>
 
-      <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {modules.map((module) => (
-          <ModuleCard
-            key={module.id}
-            module={module}
-            unlocked={hasAccess}
-            completed={completedLessons.includes(module.id)}
-          />
-        ))}
-      </div>
+        <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {modules.map((module) => (
+            <ModuleCard
+              key={module.id}
+              module={module}
+              unlocked={hasAccess}
+              completed={completedLessons.includes(module.id)}
+            />
+          ))}
+        </div>
+      </section>
     </DashboardShell>
   );
 }
 
-function PathCard({ icon, title, copy }: { icon: ReactNode; title: string; copy: string }) {
+function PathCard({ icon, title, href, copy }: { icon: ReactNode; title: string; href: string; copy: string }) {
   return (
-    <div className="htk-path-card">
+    <a
+      href={href}
+      className="htk-path-card block focus:outline-none focus:ring-2 focus:ring-htk-red focus:ring-offset-2 focus:ring-offset-background"
+      aria-label={`${title}: choose a training module first`}
+    >
       <div className="text-htk-red">{icon}</div>
       <p className="mt-3 text-sm font-black uppercase text-accent">{title}</p>
       <p className="mt-2 text-sm leading-6 text-htk-muted">{copy}</p>
-    </div>
+      <p className="mt-4 text-xs font-black uppercase text-htk-red">Choose a module first</p>
+    </a>
   );
 }

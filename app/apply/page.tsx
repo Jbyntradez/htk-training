@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowLeft, ShieldCheck, Timer, Zap } from "lucide-react";
+import { ShieldCheck, Timer, Zap } from "lucide-react";
 import { CoachingApplicationForm } from "@/components/CoachingApplicationForm";
 import { CtaLink } from "@/components/htk/CtaLink";
+import { MarketingNav } from "@/components/marketing/MarketingNav";
 import { HTK_BOOKING_URL } from "@/lib/htk-config";
 
 export const metadata: Metadata = {
@@ -33,31 +33,7 @@ const standards = [
 export default function ApplyPage() {
   return (
     <main className="min-h-screen bg-[#050505] text-white">
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#050505]/90 backdrop-blur-xl">
-        <div className="container-px mx-auto flex h-[72px] max-w-7xl items-center justify-between py-4">
-          <Link href="/" className="flex items-center gap-3" aria-label="HTK Training home">
-            <span className="grid size-10 place-items-center rounded-md border border-red-500/45 bg-red-500/10 text-sm font-black text-white shadow-[0_0_34px_rgba(220,38,38,0.28)]">
-              HTK
-            </span>
-            <span className="leading-none">
-              <span className="block text-base font-black uppercase">HTK</span>
-              <span className="block text-[10px] font-bold uppercase text-white/60">Training</span>
-            </span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="hidden items-center gap-2 text-sm font-semibold text-white/60 transition hover:text-white sm:inline-flex"
-            >
-              <ArrowLeft className="size-4" />
-              Back
-            </Link>
-            <CtaLink href={HTK_BOOKING_URL} external size="sm">
-              Book Now
-            </CtaLink>
-          </div>
-        </div>
-      </header>
+      <MarketingNav activeHref="/apply" />
 
       <section className="relative isolate overflow-hidden border-b border-white/10">
         <Image

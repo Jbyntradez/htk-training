@@ -7,6 +7,7 @@ import { SignOutButton } from "@/components/auth/SignOutButton";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { ProgressRing } from "@/components/dashboard/ProgressRing";
 import { Button, ButtonLink } from "@/components/ui/button";
+import { Microcopy } from "@/components/ui/microcopy";
 import { Textarea } from "@/components/ui/textarea";
 import { canManagePlatform } from "@/lib/role-permissions";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
@@ -294,7 +295,7 @@ export function HtkDashboardClient() {
             Check readiness, complete the assigned work, and save the signal your coach needs next.
           </p>
         </div>
-        <ProgressRing percent={readiness} />
+        <ProgressRing percent={readiness} label="Ready" />
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -302,13 +303,20 @@ export function HtkDashboardClient() {
           icon={Activity}
           label="Readiness"
           value={dashboard.checkIn ? `${dashboard.checkIn.readinessScore}%` : "Needed"}
+          explainer="Readiness reflects today's self-reported sleep, energy, soreness, stress, and pain flag. It helps decide how aggressively to train."
         />
         <SignalCard
           icon={Dumbbell}
           label="Training"
           value={trainingComplete ? "Complete" : "Assigned"}
+          explainer="Training shows whether today's assigned session has been completed and reported back to the coach."
         />
-        <SignalCard icon={Timer} label="Date" value={dashboard.today} />
+        <SignalCard
+          icon={Timer}
+          label="Date"
+          value={dashboard.today}
+          explainer="Date anchors the daily loop so check-ins and completion notes are attached to the correct training day."
+        />
       </div>
 
       <AthleteSummaryCard onboarding={dashboard.onboarding} />
@@ -396,15 +404,26 @@ function formatTrainingLevel(level: AthleteOnboardingSummary["trainingLevel"]) {
 function SignalCard({
   icon: Icon,
   label,
-  value
+  value,
+  explainer
 }: {
   icon: typeof Activity;
   label: string;
   value: string;
+  explainer: string;
 }) {
   return (
     <div className="rounded-md border border-white/10 bg-primary p-5">
-      <Icon className="h-5 w-5 text-accent/45" />
+      <div className="flex items-start justify-between gap-3">
+        <Icon className="h-5 w-5 text-htk-red" />
+        <Microcopy
+          label="What this means"
+          description={explainer}
+          icon={<Icon className="h-3.5 w-3.5" />}
+          align="right"
+          summaryClassName="px-2 py-1 text-[10px]"
+        />
+      </div>
       <p className="mt-4 text-xs font-black uppercase text-accent/40">{label}</p>
       <p className="mt-2 text-xl font-black">{value}</p>
     </div>

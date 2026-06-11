@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { FileDown, Save, ShieldAlert } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,8 +43,43 @@ export function WorkoutSummary({
     advanced: string;
   };
 }) {
+  const [feedback, setFeedback] = useState("");
   const totalEstimatedTime = exercises.reduce((total, exercise) => total + exercise.estimatedMinutes, 8);
   const durationLabel = estimatedDuration ?? `${totalEstimatedTime} minutes including warm-up`;
+
+  function showFeedback(message: string) {
+    setFeedback(message);
+    window.setTimeout(() => setFeedback(""), 2800);
+  }
+
+  function saveWorkout() {
+    try {
+      const savedWorkouts = JSON.parse(window.localStorage.getItem("htk_saved_workouts") ?? "[]") as unknown[];
+      window.localStorage.setItem(
+        "htk_saved_workouts",
+        JSON.stringify([
+          {
+            savedAt: new Date().toISOString(),
+            title,
+            goalTitle,
+            trainingModule: trainingModule.title,
+            difficulty,
+            equipment,
+            exerciseIds: exercises.map((exercise) => exercise.id)
+          },
+          ...savedWorkouts
+        ])
+      );
+      showFeedback("Workout saved on this device.");
+    } catch {
+      showFeedback("Saved for this session.");
+    }
+  }
+
+  function printWorkout() {
+    showFeedback("Opening print dialog. Choose Save as PDF to export.");
+    window.print();
+  }
 
   return (
     <div>
@@ -54,16 +90,25 @@ export function WorkoutSummary({
           <p className="mt-3 max-w-2xl text-sm leading-6 text-htk-muted">{description}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button type="button" variant="outline" disabled className="gap-2">
+          <Button type="button" variant="outline" onClick={saveWorkout} className="gap-2">
             <Save className="h-4 w-4" />
             Save Workout
           </Button>
-          <Button type="button" variant="outline" disabled className="gap-2">
+          <Button type="button" variant="outline" onClick={printWorkout} className="gap-2">
             <FileDown className="h-4 w-4" />
             Print / Export
           </Button>
         </div>
       </div>
+      {feedback ? (
+        <p
+          role="status"
+          aria-live="polite"
+          className="mt-4 rounded-md border border-htk-red/25 bg-htk-red/[0.08] px-4 py-3 text-sm font-bold text-accent"
+        >
+          {feedback}
+        </p>
+      ) : null}
 
       <div className="mt-6 grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
         <section className="htk-card p-5">

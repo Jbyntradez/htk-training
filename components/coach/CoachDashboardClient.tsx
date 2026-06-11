@@ -6,6 +6,7 @@ import {
   Activity,
   AlertTriangle,
   CalendarPlus,
+  ChevronRight,
   CheckCircle2,
   ClipboardList,
   Dumbbell,
@@ -19,6 +20,8 @@ import {
   XCircle
 } from "lucide-react";
 import { SignOutButton } from "@/components/auth/SignOutButton";
+import { UserIdentityBadge, ViewStatusBadge } from "@/components/dashboard/UserIdentityBadge";
+import { HtkWordmark } from "@/components/htk/HtkWordmark";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -424,6 +427,7 @@ export function CoachDashboardClient() {
                   key={athlete.profileId}
                   athlete={athlete}
                   active={athlete.profileId === selectedProfileId}
+                  coachName={coach?.name ?? "HTK coaching team"}
                   onClick={() => void selectAthlete(athlete.profileId)}
                 />
               ))
@@ -459,14 +463,13 @@ function CoachShell({
   coach: CoachProfile | null;
   userAction?: ReactNode;
 }) {
+  const identity = coach ? toIdentity(coach) : null;
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-white/10 bg-primary">
         <div className="container-px mx-auto flex min-h-20 max-w-7xl flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-sm font-black uppercase">HTK Operator</p>
-            <p className="mt-1 text-xs font-bold uppercase text-accent/40">Coach dashboard</p>
-          </div>
+          <HtkWordmark href="/coach" label="Go to HTK coach dashboard" eyebrow="Coach dashboard" />
           <div className="flex flex-wrap items-center gap-3">
             {canManagePlatform(coach?.role) ? (
               <ButtonLink href="/admin" variant="outline" className="min-h-10 px-4 text-xs">
@@ -477,12 +480,8 @@ function CoachShell({
               Athlete View
             </ButtonLink>
             {userAction}
-            {coach ? (
-              <div className="rounded-md border border-white/10 bg-background px-3 py-2 text-right">
-                <p className="text-sm font-black">{coach.name}</p>
-                <p className="text-xs uppercase text-accent/45">{coach.role}</p>
-              </div>
-            ) : null}
+            {identity ? <ViewStatusBadge view="coach" /> : null}
+            {identity ? <UserIdentityBadge user={identity} /> : null}
           </div>
         </div>
       </header>
@@ -582,53 +581,69 @@ function SelectControl({
 function AthleteRosterButton({
   athlete,
   active,
+  coachName,
   onClick
 }: {
   athlete: CoachAthleteListItem;
   active: boolean;
+  coachName: string;
   onClick: () => void;
 }) {
+  const trainingStatus = athlete.latestTrainingStatus ? formatStatus(athlete.latestTrainingStatus) : "No assignment yet";
+
   return (
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
+      title={`Open profile panel for ${athlete.fullName}`}
       className={cn(
-        "rounded-md border p-4 text-left transition",
+        "rounded-md border p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-htk-red focus:ring-offset-2 focus:ring-offset-background",
         active
-          ? "border-accent/50 bg-white/[0.08]"
-          : "border-white/10 bg-background hover:border-white/20 hover:bg-white/[0.04]"
+          ? "border-htk-red/70 bg-htk-red/[0.09]"
+          : "border-white/10 bg-background hover:border-htk-red/35 hover:bg-white/[0.04]"
       )}
     >
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-black">{athlete.fullName}</p>
-          <p className="mt-1 text-xs text-accent/45">{athlete.email || "No email saved"}</p>
+        <div className="flex items-start gap-3">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-md border border-htk-red/25 bg-htk-red/[0.08] text-htk-red">
+            <UserCheck className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-sm font-black">{athlete.fullName}</p>
+            <p className="mt-1 text-xs text-accent/45">{athlete.email || "No email saved"}</p>
+            <p className="mt-2 text-[10px] font-black uppercase text-htk-red">Open profile panel</p>
+          </div>
         </div>
-        {athlete.onboardingCompleted ? (
-          <CheckCircle2 className="h-5 w-5 shrink-0 text-accent/65" />
-        ) : (
-          <XCircle className="h-5 w-5 shrink-0 text-red-300/80" />
-        )}
+        <div className="flex items-center gap-2">
+          {athlete.onboardingCompleted ? (
+            <CheckCircle2 className="h-5 w-5 shrink-0 text-accent/65" />
+          ) : (
+            <XCircle className="h-5 w-5 shrink-0 text-red-300/80" />
+          )}
+          <ChevronRight className={cn("h-4 w-4 text-htk-red transition", active && "rotate-90")} />
+        </div>
       </div>
-      <div className="mt-4 grid gap-2 text-xs text-accent/55">
-        <p>
-          {athlete.trainingLevel ? formatTrainingLevel(athlete.trainingLevel) : "No level"} ·{" "}
-          {athlete.sport || "General performance"}
-        </p>
-        <p>
-          Readiness:{" "}
-          <span className="font-black text-accent/75">
-            {athlete.latestReadinessScore === null ? "No check-in" : `${athlete.latestReadinessScore}%`}
-          </span>
-        </p>
-        <p>
-          Training:{" "}
-          <span className="font-black text-accent/75">
-            {athlete.latestTrainingStatus ? formatStatus(athlete.latestTrainingStatus) : "No assignment"}
-          </span>
-        </p>
+      <div className="mt-4 grid gap-2 text-xs text-accent/60">
+        <RosterLine label="Sport" value={formatOptionalText(athlete.sport, "General performance")} />
+        <RosterLine label="Goal" value={formatOptionalText(athlete.primaryGoals, "No goal listed yet")} />
+        <RosterLine label="Status" value={`${athlete.trainingLevel ? formatTrainingLevel(athlete.trainingLevel) : "No level listed"} / ${trainingStatus}`} />
+        <RosterLine label="Assigned coach" value={coachName} />
+        <RosterLine
+          label="Readiness"
+          value={athlete.latestReadinessScore === null ? "No check-in yet" : `${athlete.latestReadinessScore}%`}
+        />
       </div>
     </button>
+  );
+}
+
+function RosterLine({ label, value }: { label: string; value: string }) {
+  return (
+    <p>
+      <span className="font-black uppercase text-accent/40">{label}: </span>
+      <span className="font-bold text-accent/75">{value}</span>
+    </p>
   );
 }
 
@@ -920,10 +935,10 @@ function OnboardingPanel({
         <div>
           <p className="text-sm font-black uppercase text-accent/45">Onboarding profile</p>
           <h3 className="mt-3 text-3xl font-black">
-            {formatTrainingLevel(onboarding.trainingLevel)} · {onboarding.sport || "General performance"}
+            {formatTrainingLevel(onboarding.trainingLevel)} · {formatOptionalText(onboarding.sport, "General performance")}
           </h3>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-accent/60">
-            {onboarding.primaryGoals}
+            {formatOptionalText(onboarding.primaryGoals, "No goal listed yet")}
           </p>
         </div>
         <div className="grid size-16 place-items-center rounded-md border border-white/10 bg-background">
@@ -943,7 +958,7 @@ function OnboardingPanel({
         <DetailItem label="Equipment access" value={onboarding.equipmentAccess} wide />
         <DetailItem
           label="Injuries/current pain"
-          value={onboarding.injuriesCurrentPain || "None reported"}
+          value={formatOptionalText(onboarding.injuriesCurrentPain, "None reported")}
           wide
         />
       </div>
@@ -1092,6 +1107,39 @@ function formatStatus(status: TrainingStatus) {
 
 function formatTrainingLevel(level: AthleteTrainingLevel) {
   return level[0].toUpperCase() + level.slice(1);
+}
+
+function formatOptionalText(value: string | null | undefined, fallback: string) {
+  const cleaned = value?.replace(/[·•]/g, " ").replace(/\s+/g, " ").trim() ?? "";
+  const withoutPunctuation = cleaned.replace(/[^a-z0-9]/gi, "");
+  const repeatedSingleCharacter =
+    withoutPunctuation.length >= 4 && new Set(withoutPunctuation.toLowerCase()).size === 1;
+
+  if (!cleaned || repeatedSingleCharacter) {
+    return fallback;
+  }
+
+  return cleaned;
+}
+
+function toIdentity(profile: CoachProfile) {
+  return {
+    name: profile.name,
+    initials: initialsFor(profile.name, profile.email),
+    email: profile.email,
+    role: profile.role
+  };
+}
+
+function initialsFor(name: string, email: string) {
+  const source = name.trim() || email.trim();
+  const parts = source.split(/\s+/).filter(Boolean);
+
+  if (parts.length >= 2) {
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  }
+
+  return source.slice(0, 2).toUpperCase() || "HT";
 }
 
 function getDateInputValue(date: Date) {

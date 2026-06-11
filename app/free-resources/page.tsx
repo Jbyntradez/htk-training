@@ -3,7 +3,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Download, FileText, ShieldCheck, Target, Utensils } from "lucide-react";
 import { CtaLink } from "@/components/htk/CtaLink";
-import { HTK_APPLICATION_PATH, HTK_BOOKING_URL } from "@/lib/htk-config";
+import { MarketingNav } from "@/components/marketing/MarketingNav";
+import { HTK_APPLICATION_PATH } from "@/lib/htk-config";
 
 export const metadata: Metadata = {
   title: "Free Resources | HTK Training",
@@ -32,18 +33,10 @@ const resources = [
   }
 ];
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Services", href: "/#services" },
-  { label: "Results", href: "/#results" },
-  { label: "Free Resources", href: "/free-resources" },
-  { label: "Apply", href: HTK_APPLICATION_PATH }
-];
-
 export default function FreeResourcesPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#050505] text-white">
-      <Header />
+      <MarketingNav activeHref="/free-resources" />
       <section className="relative isolate overflow-hidden border-b border-white/10">
         <Image
           src="/htk/train-for-real-life.png"
@@ -159,40 +152,6 @@ export default function FreeResourcesPage() {
       </section>
       <Footer />
     </main>
-  );
-}
-
-function Header() {
-  return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050505]/90 backdrop-blur-xl">
-      <div className="container-px mx-auto flex h-[72px] max-w-7xl items-center justify-between py-4">
-        <Link href="/" className="flex items-center gap-3" aria-label="HTK Training home">
-          <span className="grid size-10 place-items-center rounded-md border border-red-500/45 bg-red-500/10 text-sm font-black text-white shadow-[0_0_34px_rgba(220,38,38,0.28)]">
-            HTK
-          </span>
-          <span className="leading-none">
-            <span className="block text-base font-black uppercase">HTK</span>
-            <span className="block text-[10px] font-bold uppercase text-white/60">Training</span>
-          </span>
-        </Link>
-        <nav className="hidden items-center gap-4 text-[13px] font-semibold text-white/60 xl:gap-6 xl:text-sm lg:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`transition hover:text-white ${
-                item.href === "/free-resources" ? "text-white" : ""
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <CtaLink href={HTK_BOOKING_URL} external size="sm">
-          Book Now
-        </CtaLink>
-      </div>
-    </header>
   );
 }
 

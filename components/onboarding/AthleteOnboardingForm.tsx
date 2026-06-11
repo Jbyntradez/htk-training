@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
-import { Activity, Loader2, ShieldCheck } from "lucide-react";
+import { Activity, AlertTriangle, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -454,8 +454,8 @@ export function AthleteOnboardingForm() {
               />
             </Field>
 
-            <div>
-              <p className="mb-3 text-sm font-bold text-accent/75">Cleared for exercise</p>
+            <fieldset>
+              <legend className="mb-3 text-sm font-bold text-accent/75">Cleared for exercise</legend>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: "Yes", value: true },
@@ -465,9 +465,12 @@ export function AthleteOnboardingForm() {
                     key={option.label}
                     type="button"
                     onClick={() => updateField("clearedForExercise", option.value)}
+                    aria-pressed={form.clearedForExercise === option.value}
                     className={`min-h-11 rounded-md border px-4 text-sm font-black uppercase transition ${
                       form.clearedForExercise === option.value
-                        ? "border-accent bg-accent text-background"
+                        ? option.value
+                          ? "border-emerald-300/60 bg-emerald-300/15 text-emerald-100"
+                          : "border-htk-red bg-htk-red text-white"
                         : "border-white/10 bg-background text-accent/65 hover:border-white/25 hover:text-accent"
                     }`}
                   >
@@ -478,7 +481,18 @@ export function AthleteOnboardingForm() {
               {fieldErrors.clearedForExercise ? (
                 <p className="mt-2 text-sm text-red-300">{fieldErrors.clearedForExercise}</p>
               ) : null}
-            </div>
+              {form.clearedForExercise === false ? (
+                <div className="mt-3 rounded-md border border-htk-red/30 bg-htk-red/[0.08] p-4">
+                  <div className="flex gap-3">
+                    <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-htk-red" />
+                    <p className="text-sm leading-6 text-accent/75">
+                      You may need medical clearance before starting. You can still submit your intake, but a coach may
+                      follow up before assigning training.
+                    </p>
+                  </div>
+                </div>
+              ) : null}
+            </fieldset>
 
             {message ? <p className="text-sm leading-6 text-red-300">{message}</p> : null}
 
@@ -513,6 +527,10 @@ function OnboardingShell({
             <p className="mt-1 text-xs uppercase text-accent/40">Athlete intake</p>
           </div>
           <div className="flex items-center gap-3">
+            <ButtonLink href="/dashboard" variant="outline" className="hidden min-h-10 px-4 text-xs sm:inline-flex">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </ButtonLink>
             {action}
             <div className="hidden items-center gap-2 rounded-md border border-white/10 bg-background px-3 py-2 text-xs font-black uppercase text-accent/50 sm:flex">
               <ShieldCheck className="h-4 w-4" />
@@ -522,6 +540,10 @@ function OnboardingShell({
         </div>
       </header>
       <div className="container-px mx-auto max-w-7xl py-8 md:py-12">
+        <ButtonLink href="/dashboard" variant="ghost" className="mb-5 min-h-10 px-3 text-xs sm:hidden">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Dashboard
+        </ButtonLink>
         {children}
       </div>
     </main>

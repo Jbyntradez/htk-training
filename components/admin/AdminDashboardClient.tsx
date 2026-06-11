@@ -5,15 +5,20 @@ import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import {
   Activity,
   AlertTriangle,
+  ChevronDown,
   CheckCircle2,
   ClipboardList,
   Dumbbell,
   Loader2,
+  Shield,
   ShieldAlert,
   ShieldCheck,
+  User,
   Users
 } from "lucide-react";
 import { SignOutButton } from "@/components/auth/SignOutButton";
+import { UserIdentityBadge, ViewStatusBadge } from "@/components/dashboard/UserIdentityBadge";
+import { HtkWordmark } from "@/components/htk/HtkWordmark";
 import { Button, ButtonLink } from "@/components/ui/button";
 import type { AdminOverview, AdminProfile } from "@/lib/admin-platform-types";
 import { canAccessCoachTools, canManagePlatform } from "@/lib/role-permissions";
@@ -34,36 +39,48 @@ export function AdminDashboardClient() {
   const [overview, setOverview] = useState<AdminOverview | null>(null);
   const [status, setStatus] = useState<LoadState>("booting");
   const [message, setMessage] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefreshedAt, setLastRefreshedAt] = useState<string | null>(null);
+  const [expandedProfileId, setExpandedProfileId] = useState<string | null>(null);
 
-  const loadOverview = useCallback(async (accessToken: string) => {
-    setStatus("loading");
+  const loadOverview = useCallback(async (accessToken: string, quiet = false) => {
+    if (quiet) {
+      setRefreshing(true);
+    } else {
+      setStatus("loading");
+    }
     setMessage("");
 
-    const response = await fetch("/api/admin/overview", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
-      cache: "no-store"
-    });
+    try {
+      const response = await fetch("/api/admin/overview", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        cache: "no-store"
+      });
 
-    const result = await response.json().catch(() => null);
+      const result = await response.json().catch(() => null);
 
-    if (!response.ok) {
-      setStatus(
-        response.status === 401
-          ? "signed_out"
-          : response.status === 403
-            ? "forbidden"
-            : "error"
-      );
-      setMessage(result?.error ?? "Could not load admin panel.");
-      return;
+      if (!response.ok) {
+        setStatus(
+          response.status === 401
+            ? "signed_out"
+            : response.status === 403
+              ? "forbidden"
+              : "error"
+        );
+        setMessage(result?.error ?? "Could not load admin panel.");
+        return;
+      }
+
+      const payload = result as AdminOverviewResponse;
+      setAdmin(payload.admin);
+      setOverview(payload.overview);
+      setStatus("ready");
+      setLastRefreshedAt(new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }));
+    } finally {
+      setRefreshing(false);
     }
-
-    const payload = result as AdminOverviewResponse;
-    setAdmin(payload.admin);
-    setOverview(payload.overview);
-    setStatus("ready");
   }, []);
 
   useEffect(() => {
@@ -127,7 +144,7 @@ export function AdminDashboardClient() {
       return;
     }
 
-    await loadOverview(session.access_token);
+    await loadOverview(session.access_token, status === "ready");
   }
 
   if (status === "booting" || status === "loading") {
@@ -196,9 +213,19 @@ export function AdminDashboardClient() {
           <ButtonLink href="/coach" variant="outline" className="min-h-11 px-4 text-xs">
             Coach Tools
           </ButtonLink>
-          <Button onClick={refresh} variant="outline" className="min-h-11 px-4 text-xs">
-            Refresh
+          <Button onClick={refresh} variant="outline" disabled={refreshing} className="min-h-11 px-4 text-xs">
+            {refreshing ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Refreshing
+              </>
+            ) : (
+              "Refresh"
+            )}
           </Button>
+          <p role="status" aria-live="polite" className="text-xs font-bold uppercase text-accent/45">
+            {lastRefreshedAt ? `Updated ${lastRefreshedAt}` : "Refresh ready"}
+          </p>
         </div>
       </section>
 
@@ -242,21 +269,14 @@ export function AdminDashboardClient() {
           <div className="mt-5 grid gap-3">
             {overview.recentProfiles.length ? (
               overview.recentProfiles.map((profile) => (
-                <div
+                <AdminProfileRow
                   key={profile.id}
-                  className="flex flex-col gap-3 rounded-md border border-white/10 bg-background p-4 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div>
-                    <p className="text-sm font-black">{profile.fullName}</p>
-                    <p className="mt-1 text-xs text-accent/45">{profile.email || "No email saved"}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <RolePill role={profile.role} />
-                    {profile.onboardingCompleted ? (
-                      <CheckCircle2 className="h-5 w-5 text-accent/60" />
-                    ) : null}
-                  </div>
-                </div>
+                  profile={profile}
+                  expanded={expandedProfileId === profile.id}
+                  onToggle={() =>
+                    setExpandedProfileId((current) => (current === profile.id ? null : profile.id))
+                  }
+                />
               ))
             ) : (
               <p className="rounded-md border border-white/10 bg-background p-4 text-sm text-accent/55">
@@ -279,14 +299,13 @@ function AdminShell({
   admin: AdminProfile | null;
   userAction?: ReactNode;
 }) {
+  const identity = admin ? toIdentity(admin) : null;
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-white/10 bg-primary">
         <div className="container-px mx-auto flex min-h-20 max-w-7xl flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-sm font-black uppercase">HTK Operator</p>
-            <p className="mt-1 text-xs font-bold uppercase text-accent/40">Admin panel</p>
-          </div>
+          <HtkWordmark href="/admin" label="Go to HTK admin panel" eyebrow="Admin panel" />
           <div className="flex flex-wrap items-center gap-3">
             <ButtonLink href="/coach" variant="outline" className="min-h-10 px-4 text-xs">
               Coach Tools
@@ -295,16 +314,77 @@ function AdminShell({
               Athlete View
             </ButtonLink>
             {userAction}
-            {admin ? (
-              <div className="rounded-md border border-white/10 bg-background px-3 py-2 text-right">
-                <p className="text-sm font-black">{admin.name}</p>
-                <p className="text-xs uppercase text-accent/45">{admin.role}</p>
-              </div>
-            ) : null}
+            {identity ? <ViewStatusBadge view="admin" /> : null}
+            {identity ? <UserIdentityBadge user={identity} /> : null}
           </div>
         </div>
       </header>
       <main className="container-px mx-auto max-w-7xl py-8 md:py-12">{children}</main>
+    </div>
+  );
+}
+
+function AdminProfileRow({
+  profile,
+  expanded,
+  onToggle
+}: {
+  profile: AdminOverview["recentProfiles"][number];
+  expanded: boolean;
+  onToggle: () => void;
+}) {
+  const profileName = formatAdminText(profile.fullName, "Unnamed profile");
+  const profileEmail = formatAdminText(profile.email, "No email saved");
+
+  return (
+    <article className="rounded-md border border-white/10 bg-background">
+      <button
+        type="button"
+        aria-expanded={expanded}
+        onClick={onToggle}
+        title={`Open profile summary for ${profileName}`}
+        className="flex w-full flex-col gap-3 rounded-md p-4 text-left transition hover:bg-white/[0.04] focus:outline-none focus:ring-2 focus:ring-htk-red focus:ring-offset-2 focus:ring-offset-background sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div className="flex items-start gap-3">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-md border border-htk-red/25 bg-htk-red/[0.08] text-htk-red">
+            <User className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-sm font-black">{profileName}</p>
+            <p className="mt-1 text-xs text-accent/45">{profileEmail}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <RolePill role={profile.role} />
+          {profile.onboardingCompleted ? (
+            <span className="inline-flex items-center gap-1 rounded-md border border-accent/20 bg-accent/10 px-2 py-1 text-xs font-black uppercase text-accent/75">
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              Onboarded
+            </span>
+          ) : (
+            <span className="rounded-md border border-white/10 bg-primary px-2 py-1 text-xs font-black uppercase text-accent/45">
+              Intake open
+            </span>
+          )}
+          <ChevronDown className={cn("h-4 w-4 text-htk-red transition", expanded && "rotate-180")} />
+        </div>
+      </button>
+      {expanded ? (
+        <div className="grid gap-3 border-t border-white/10 p-4 text-sm sm:grid-cols-3">
+          <SmallProfileStat label="Role" value={profile.role} />
+          <SmallProfileStat label="Email" value={profileEmail} />
+          <SmallProfileStat label="Created" value={formatDateTime(profile.createdAt)} />
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
+function SmallProfileStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border border-white/10 bg-primary p-3">
+      <p className="text-xs font-black uppercase text-accent/40">{label}</p>
+      <p className="mt-2 break-words text-sm font-bold leading-6 text-accent/75">{value}</p>
     </div>
   );
 }
@@ -378,10 +458,12 @@ function SmallStat({ label, value }: { label: string; value: number }) {
 }
 
 function RolePill({ role }: { role: AdminOverview["recentProfiles"][number]["role"] }) {
+  const Icon = canManagePlatform(role) ? ShieldAlert : canAccessCoachTools(role) ? ShieldCheck : Shield;
+
   return (
     <span
       className={cn(
-        "rounded-md border px-3 py-1 text-xs font-black uppercase",
+        "inline-flex items-center gap-1.5 rounded-md border px-3 py-1 text-xs font-black uppercase",
         canManagePlatform(role) && "border-red-300/20 bg-red-950/20 text-red-200",
         canAccessCoachTools(role) &&
           !canManagePlatform(role) &&
@@ -389,7 +471,55 @@ function RolePill({ role }: { role: AdminOverview["recentProfiles"][number]["rol
         !canAccessCoachTools(role) && "border-white/10 bg-primary text-accent/55"
       )}
     >
+      <Icon className="h-3.5 w-3.5" />
       {role}
     </span>
   );
+}
+
+function toIdentity(profile: AdminProfile) {
+  return {
+    name: profile.name,
+    initials: initialsFor(profile.name, profile.email),
+    email: profile.email,
+    role: profile.role
+  };
+}
+
+function initialsFor(name: string, email: string) {
+  const source = name.trim() || email.trim();
+  const parts = source.split(/\s+/).filter(Boolean);
+
+  if (parts.length >= 2) {
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  }
+
+  return source.slice(0, 2).toUpperCase() || "HT";
+}
+
+function formatDateTime(value: string | null) {
+  if (!value) {
+    return "Not saved";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  }).format(new Date(value));
+}
+
+function formatAdminText(value: string | null | undefined, fallback: string) {
+  const cleaned = value?.replace(/[·•]/g, " ").replace(/\s+/g, " ").trim() ?? "";
+  const withoutPunctuation = cleaned.replace(/[^a-z0-9]/gi, "");
+  const repeatedSingleCharacter =
+    withoutPunctuation.length >= 4 && new Set(withoutPunctuation.toLowerCase()).size === 1;
+
+  if (!cleaned || repeatedSingleCharacter) {
+    return fallback;
+  }
+
+  return cleaned;
 }

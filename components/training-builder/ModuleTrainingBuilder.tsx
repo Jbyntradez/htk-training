@@ -5,6 +5,7 @@ import { Dumbbell, ListChecks, RotateCcw, Search, ShieldCheck, SlidersHorizontal
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Microcopy } from "@/components/ui/microcopy";
 import { ExerciseCard } from "@/components/training-builder/ExerciseCard";
 import { PresetWorkoutCard } from "@/components/training-builder/PresetWorkoutCard";
 import { WorkoutSummary } from "@/components/training-builder/WorkoutSummary";
@@ -46,6 +47,7 @@ export function ModuleTrainingBuilder({
   const [filters, setFilters] = useState<FilterState>(emptyFilters);
   const [selectedPresetId, setSelectedPresetId] = useState<string | null>(null);
   const [selectedExerciseIds, setSelectedExerciseIds] = useState<string[]>([]);
+  const [activeSection, setActiveSection] = useState("preset-workouts");
 
   const filteredExercises = useMemo(() => {
     const searchValue = filters.search.trim().toLowerCase();
@@ -171,18 +173,24 @@ export function ModuleTrainingBuilder({
             icon={<ListChecks className="h-5 w-5" />}
             title="Preset Workouts"
             copy="Start with an HTK-built session and execute with standards."
+            active={activeSection === "preset-workouts"}
+            onActivate={() => setActiveSection("preset-workouts")}
           />
           <ActionPath
             href="#exercise-library"
             icon={<Dumbbell className="h-5 w-5" />}
             title="Browse Exercises"
             copy="Review cues, modifications, video placeholders, and safety notes."
+            active={activeSection === "exercise-library"}
+            onActivate={() => setActiveSection("exercise-library")}
           />
           <ActionPath
             href="#build-custom-workout"
             icon={<ShieldCheck className="h-5 w-5" />}
             title="Build Custom Workout"
             copy="Select module-specific movements and generate a clean workout brief."
+            active={activeSection === "build-custom-workout"}
+            onActivate={() => setActiveSection("build-custom-workout")}
           />
         </div>
 
@@ -193,15 +201,28 @@ export function ModuleTrainingBuilder({
             { href: "#exercise-library", label: "Exercise Library" },
             { href: "#build-custom-workout", label: "Build Custom Workout" },
             { href: "#workout-summary", label: "Workout Summary" }
-          ].map((item) => (
+          ].map((item) => {
+            const sectionId = item.href.slice(1);
+            const active = activeSection === sectionId;
+
+            return (
             <a
               key={item.href}
               href={item.href}
-              className="rounded-md border border-white/10 bg-black/35 px-3 py-2 text-xs font-black uppercase text-accent/65 transition hover:border-htk-red/60 hover:bg-htk-red/[0.08] hover:text-white"
+              onClick={() => setActiveSection(sectionId)}
+              aria-current={active ? "location" : undefined}
+              aria-label={`Jump to ${item.label} in ${builder.title}`}
+              className={cn(
+                "rounded-md border px-3 py-2 text-xs font-black uppercase transition focus:outline-none focus:ring-2 focus:ring-htk-red focus:ring-offset-2 focus:ring-offset-background",
+                active
+                  ? "border-htk-red bg-htk-red text-white"
+                  : "border-white/10 bg-black/35 text-accent/65 hover:border-htk-red/60 hover:bg-htk-red/[0.08] hover:text-white"
+              )}
             >
               {item.label}
             </a>
-          ))}
+            );
+          })}
         </nav>
 
         <div className="mt-5 grid gap-3 md:grid-cols-3">
@@ -362,7 +383,10 @@ export function ModuleTrainingBuilder({
               selected
             </p>
             {selectedExercises.length > 0 ? (
-              <a href="#workout-summary" className="font-black uppercase text-htk-red hover:text-red-400">
+              <a
+                href="#workout-summary"
+                className="rounded-sm font-black uppercase text-htk-red hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-htk-red focus:ring-offset-2 focus:ring-offset-background"
+              >
                 View Workout Summary
               </a>
             ) : null}
@@ -454,9 +478,18 @@ function ChipGroup({
   value: string | null;
   onChange: (value: string) => void;
 }) {
+  const description = filterDescription(title);
+
   return (
     <div>
-      <p className="text-xs font-black uppercase text-htk-red">{title}</p>
+      <div className="flex items-center gap-2">
+        <p className="text-xs font-black uppercase text-htk-red">{title}</p>
+        <Microcopy
+          label="Guide"
+          description={description}
+          summaryClassName="px-2 py-1 text-[10px]"
+        />
+      </div>
       <div className="mt-2 flex flex-wrap gap-2">
         {options.map((option) => (
           <button
@@ -464,8 +497,11 @@ function ChipGroup({
             type="button"
             data-testid={`filter-${testIdPrefix}-${slugForTestId(option)}`}
             onClick={() => onChange(option)}
+            aria-pressed={value === option}
+            title={`${title}: ${option}. ${description}`}
+            aria-label={`Filter ${title} by ${option}`}
             className={cn(
-              "rounded-md border px-3 py-2 text-xs font-black uppercase transition",
+              "rounded-md border px-3 py-2 text-xs font-black uppercase transition focus:outline-none focus:ring-2 focus:ring-htk-red focus:ring-offset-2 focus:ring-offset-background",
               value === option
                 ? "border-htk-red bg-htk-red text-white shadow-[0_10px_28px_rgba(225,29,46,0.22)]"
                 : "border-white/10 bg-black/35 text-accent/70 hover:border-htk-red/60 hover:bg-htk-red/[0.08] hover:text-white"
@@ -477,6 +513,19 @@ function ChipGroup({
       </div>
     </div>
   );
+}
+
+function filterDescription(title: string) {
+  const descriptions: Record<string, string> = {
+    "Muscle / Body Area": "Narrows the module to the body area or performance quality you want to train.",
+    Equipment: "Shows exercises and presets that match what the athlete has available today.",
+    Difficulty: "Controls complexity and intensity expectations for the exercise variations shown.",
+    "Training Goal": "Filters by the primary adaptation or outcome the session is designed to support.",
+    Duration: "Helps find work that fits the available time window without overloading the session.",
+    "Movement Pattern": "Narrows the library by the dominant athletic pattern or drill family."
+  };
+
+  return descriptions[title] ?? "Use this filter to narrow the module library without leaving the page.";
 }
 
 function slugForTestId(value: string) {
@@ -491,15 +540,28 @@ function ActionPath({
   href,
   icon,
   title,
-  copy
+  copy,
+  active,
+  onActivate
 }: {
   href: string;
   icon: ReactNode;
   title: string;
   copy: string;
+  active: boolean;
+  onActivate: () => void;
 }) {
   return (
-    <a href={href} className="htk-path-card block">
+    <a
+      href={href}
+      onClick={onActivate}
+      aria-current={active ? "location" : undefined}
+      title={copy}
+      className={cn(
+        "htk-path-card block focus:outline-none focus:ring-2 focus:ring-htk-red focus:ring-offset-2 focus:ring-offset-background",
+        active && "border-htk-red/70 bg-htk-red/[0.09]"
+      )}
+    >
       <div className="text-htk-red">{icon}</div>
       <p className="mt-3 text-sm font-black uppercase text-accent">{title}</p>
       <p className="mt-2 text-sm leading-6 text-htk-muted">{copy}</p>

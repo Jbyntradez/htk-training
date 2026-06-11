@@ -1,9 +1,9 @@
 export const mockUser = {
   id: "local-preview-user",
-  firstName: "Operator",
-  name: "Operator Preview",
-  initials: "OP",
-  email: "preview@hardtokill.training"
+  firstName: "Jimmy",
+  name: "Jimmy Bynum",
+  initials: "JB",
+  email: "jimmy@htktrainingco.com"
 };
 
 export async function getAccessState() {
