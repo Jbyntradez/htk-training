@@ -10,10 +10,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0A0A0A",
-        primary: "#111111",
-        accent: "#E5E5E5",
-        line: "#242424"
+        background: "#050505",
+        primary: "#0A0A0A",
+        accent: "#F5F5F5",
+        line: "#262626",
+        htk: {
+          black: "#050505",
+          panel: "#080808",
+          card: "#0D0D0D",
+          elevated: "#111111",
+          muted: "#A3A3A3",
+          red: "#E11D2E",
+          crimson: "#B91C1C"
+        }
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"]

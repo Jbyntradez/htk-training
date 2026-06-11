@@ -7,7 +7,10 @@ import { getAccessState } from "@/lib/access";
 export default async function ProgressPage() {
   const { completedLessons } = await getAccessState();
 
-  const percent = Math.round((completedLessons.length / modules.length) * 100);
+  const completedModuleIds = completedLessons.filter((moduleId) =>
+    modules.some((module) => module.id === moduleId)
+  );
+  const percent = Math.round((completedModuleIds.length / modules.length) * 100);
 
   return (
     <DashboardShell>
@@ -28,7 +31,9 @@ export default async function ProgressPage() {
             <div key={module.id} className="flex items-center justify-between gap-4 rounded-md border border-white/10 bg-primary p-5 transition hover:border-white/20">
               <div>
                 <h2 className="font-black">{module.title}</h2>
-                <p className="mt-1 text-sm text-accent/50">{module.duration}</p>
+                <p className="mt-1 text-sm text-accent/50">
+                  {module.difficultyLevel} | {module.exercises.length} exercises
+                </p>
               </div>
               {done ? <CheckCircle2 className="h-6 w-6" /> : <Circle className="h-6 w-6 text-accent/35" />}
             </div>

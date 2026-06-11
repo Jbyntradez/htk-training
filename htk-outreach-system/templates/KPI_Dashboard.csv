@@ -1,0 +1,3 @@
+Row_Type,Date,VA_Name,New_Personalized_DMs,Follow_Ups_Sent,Conversations_Started,Qualified_Leads,Calls_Scheduled,Completed_Calls_Due,Scheduled_Calls_Due,Opt_Outs,Compliance_Incidents,CRM_Records_Sampled,CRM_Records_Complete,Messages_Sampled,Messages_Passed_QA,Response_Rate,Qualification_Rate,Booking_Rate_From_Qualified,Booking_Rate_From_New_DMs,Show_Rate,CRM_Completeness,Message_QA_Pass_Rate
+DAILY_TARGET,Each production day,HTK VA,20,15,6,2,1,,,,0,,,,,0.30,0.33,0.50,0.05,,0.98,0.90
+WEEKLY_TARGET,Each five-day week,HTK VA,100,75,30,10,5,,,,0,,,,,0.30,0.33,0.50,0.05,0.70,0.98,0.90

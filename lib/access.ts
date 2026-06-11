@@ -10,6 +10,6 @@ export async function getAccessState() {
   return {
     user: mockUser,
     hasAccess: true,
-    completedLessons: ["ai-command-center"]
+    completedLessons: ["flexibility-mobility"]
   };
 }
