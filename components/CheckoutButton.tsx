@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { event as analyticsEvent, trackCtaClick } from "@/lib/analytics";
 
 export function CheckoutButton({ upsell = false }: { upsell?: boolean }) {
   const [loading, setLoading] = useState(false);
 
   async function startCheckout() {
+    const label = upsell ? "Add Advanced Vault" : "Join HTK";
+
+    trackCtaClick(label, "/checkout");
+    analyticsEvent("checkout_view", "Coaching Funnel", label);
     setLoading(true);
     const response = await fetch("/api/checkout", {
       method: "POST",
@@ -25,7 +30,7 @@ export function CheckoutButton({ upsell = false }: { upsell?: boolean }) {
 
   return (
     <Button onClick={startCheckout} disabled={loading} className="w-full sm:w-auto">
-      {loading ? "Opening Checkout" : upsell ? "Add Advanced Vault" : "Access the System"}
+      {loading ? "Opening Checkout" : upsell ? "Add Advanced Vault" : "Join HTK"}
     </Button>
   );
 }

@@ -27,7 +27,7 @@ export function OfferStack() {
             </div>
           ))}
         </div>
-        <ButtonLink href="/checkout" className="mt-10 w-full sm:w-auto">Access the System</ButtonLink>
+        <ButtonLink href="/checkout" className="mt-10 w-full sm:w-auto">Join HTK</ButtonLink>
       </div>
     </section>
   );

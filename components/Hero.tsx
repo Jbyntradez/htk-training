@@ -26,7 +26,7 @@ export function Hero() {
               A premium digital playbook for turning AI workflows, faceless content, and monetization systems into a sellable online asset.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <ButtonLink href="/checkout" className="w-full sm:w-auto">Access the System</ButtonLink>
+              <ButtonLink href="/checkout" className="w-full sm:w-auto">Join HTK</ButtonLink>
               <ButtonLink href="/product" variant="outline" className="w-full sm:w-auto">View the Playbook</ButtonLink>
             </div>
             <div className="mt-10 grid max-w-2xl grid-cols-1 gap-3 border-t border-white/10 pt-6 text-xs uppercase text-accent/58 sm:grid-cols-3 sm:text-sm">

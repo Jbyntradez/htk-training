@@ -12,7 +12,7 @@ export const marketingNavItems = [
   { label: "Results", href: "#results", section: true },
   { label: "Free Resources", href: "/free-resources" },
   { label: "Apply", href: HTK_APPLICATION_PATH },
-  { label: "Contact", href: "#contact", section: true }
+  { label: "Contact", href: "/contact" }
 ] as const;
 
 type MarketingNavProps = {
@@ -29,7 +29,7 @@ export function MarketingNav({ activeHref = "/", showBookingCta = true }: Market
         <div className="flex items-center justify-between gap-4">
           <HtkWordmark className="focus:ring-red-400 focus:ring-offset-[#050505]" />
           {showBookingCta ? (
-            <CtaLink href={HTK_BOOKING_URL} external size="sm" className="lg:hidden">
+            <CtaLink href={HTK_BOOKING_URL} size="sm" className="lg:hidden">
               Book
             </CtaLink>
           ) : null}
@@ -57,7 +57,7 @@ export function MarketingNav({ activeHref = "/", showBookingCta = true }: Market
         </nav>
 
         {showBookingCta ? (
-          <CtaLink href={HTK_BOOKING_URL} external size="sm" className="hidden lg:inline-flex">
+          <CtaLink href={HTK_BOOKING_URL} size="sm" className="hidden lg:inline-flex">
             Book Now
           </CtaLink>
         ) : null}

@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { isValidElement, type ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
+import { trackCtaClick } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 type CtaLinkProps = {
@@ -10,6 +13,7 @@ type CtaLinkProps = {
   external?: boolean;
   variant?: "primary" | "secondary";
   size?: "sm" | "base" | "card";
+  analyticsLabel?: string;
 };
 
 const sizeClasses: Record<NonNullable<CtaLinkProps["size"]>, string> = {
@@ -18,14 +22,32 @@ const sizeClasses: Record<NonNullable<CtaLinkProps["size"]>, string> = {
   card: "min-h-12 px-5"
 };
 
+function getTextContent(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(getTextContent).join(" ");
+  }
+
+  if (isValidElement<{ children?: ReactNode }>(node)) {
+    return getTextContent(node.props.children);
+  }
+
+  return "";
+}
+
 export function CtaLink({
   href,
   children,
   className,
   external = false,
   variant = "primary",
-  size = "base"
+  size = "base",
+  analyticsLabel
 }: CtaLinkProps) {
+  const label = analyticsLabel ?? getTextContent(children);
   const classes = cn(
     "inline-flex items-center justify-center rounded-md text-sm font-black transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-[#050505]",
     sizeClasses[size],
@@ -44,14 +66,20 @@ export function CtaLink({
 
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noreferrer" className={classes}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className={classes}
+        onClick={() => trackCtaClick(label, href)}
+      >
         {content}
       </a>
     );
   }
 
   return (
-    <Link href={href} className={classes}>
+    <Link href={href} className={classes} onClick={() => trackCtaClick(label, href)}>
       {content}
     </Link>
   );

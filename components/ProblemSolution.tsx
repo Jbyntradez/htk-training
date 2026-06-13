@@ -37,7 +37,7 @@ export function ProblemSolution() {
               </div>
             ))}
           </div>
-          <ButtonLink href="/checkout" className="mt-8 w-full sm:w-auto">Access the System</ButtonLink>
+          <ButtonLink href="/checkout" className="mt-8 w-full sm:w-auto">Join HTK</ButtonLink>
         </div>
       </div>
     </section>

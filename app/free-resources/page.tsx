@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowLeft, Download, FileText, ShieldCheck, Target, Utensils } from "lucide-react";
+import { ArrowLeft, FileText, ShieldCheck, Target, Utensils } from "lucide-react";
 import { CtaLink } from "@/components/htk/CtaLink";
 import { MarketingNav } from "@/components/marketing/MarketingNav";
+import { ResourceDownloadLink } from "@/components/ResourceDownloadLink";
 import { HTK_APPLICATION_PATH } from "@/lib/htk-config";
 
 export const metadata: Metadata = {
@@ -108,14 +109,12 @@ export default function FreeResourcesPage() {
                   <p className="mt-4 flex-1 text-sm leading-7 text-white/70 sm:text-base">
                     {resource.description}
                   </p>
-                  <a
+                  <ResourceDownloadLink
                     href={resource.href}
-                    download
-                    className="mt-8 inline-flex min-h-12 w-full items-center justify-center rounded-md bg-red-500 px-5 text-sm font-black text-white shadow-[0_0_36px_rgba(220,38,38,0.28)] transition hover:bg-red-400 hover:shadow-[0_0_52px_rgba(220,38,38,0.44)] focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-[#080808] sm:w-fit"
+                    resourceTitle={resource.title}
                   >
-                    Download PDF
-                    <Download className="ml-2 size-4" />
-                  </a>
+                    Download Free Resource
+                  </ResourceDownloadLink>
                 </article>
               );
             })}
@@ -145,7 +144,7 @@ export default function FreeResourcesPage() {
           </p>
           <div className="mt-8 flex justify-center">
             <CtaLink href={HTK_APPLICATION_PATH} className="w-full sm:w-auto">
-              Apply for Coaching
+              Apply Now
             </CtaLink>
           </div>
         </div>
@@ -182,9 +181,9 @@ function Footer() {
           <Link href="/terms-of-service" className="transition hover:text-white">
             Terms of Service
           </Link>
-          <a href="mailto:contact@htktrainingco.com" className="transition hover:text-white">
+          <Link href="/contact" className="transition hover:text-white">
             Contact
-          </a>
+          </Link>
           <a href="mailto:support@htktrainingco.com" className="transition hover:text-white">
             Support
           </a>

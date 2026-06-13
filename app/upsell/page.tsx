@@ -1,9 +1,15 @@
+import { EventOnMount } from "@/components/analytics/EventOnMount";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { Navbar } from "@/components/Navbar";
 
 export default function UpsellPage() {
   return (
     <>
+      <EventOnMount
+        action="checkout_view"
+        category="Coaching Funnel"
+        label="Upsell Checkout Page"
+      />
       <Navbar />
       <main className="container-px mx-auto grid min-h-[calc(100svh-64px)] max-w-4xl place-items-center py-16">
         <section className="rounded-md border border-white/10 bg-primary p-6 md:p-10">

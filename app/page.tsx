@@ -16,6 +16,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { CtaLink } from "@/components/htk/CtaLink";
 import { MarketingNav } from "@/components/marketing/MarketingNav";
+import { TrackedPrimaryLink } from "@/components/TrackedPrimaryLink";
 import { HTK_APPLICATION_PATH, HTK_BOOKING_URL } from "@/lib/htk-config";
 
 const trustIndicators = [
@@ -63,14 +64,14 @@ const services = [
     body: "A direct assessment of your goals, training history, constraints, and next move.",
     cta: "Book Consultation",
     href: HTK_BOOKING_URL,
-    external: true,
+    external: false,
     image: "/htk/htk-training-01.jpg",
     meta: "Best first step"
   },
   {
     title: "1:1 Coaching",
     body: "Custom programming, execution standards, progression, and accountability.",
-    cta: "Apply for Coaching",
+    cta: "Apply Now",
     href: HTK_APPLICATION_PATH,
     external: false,
     image: "/htk/field-throw.jpg",
@@ -81,7 +82,7 @@ const services = [
     body: "Dial in explosiveness, mobility, endurance, and training direction.",
     cta: "Schedule Call",
     href: HTK_BOOKING_URL,
-    external: true,
+    external: false,
     image: "/htk/mirror-conditioning.jpg",
     meta: "Focused consult"
   }
@@ -217,11 +218,11 @@ function Hero() {
           individuals who refuse soft standards.
         </p>
         <div className="mt-9 flex w-full max-w-xl flex-col items-center justify-center gap-3 sm:flex-row">
-          <CtaLink href={HTK_BOOKING_URL} external className="w-full sm:w-auto">
+          <CtaLink href={HTK_BOOKING_URL} className="w-full sm:w-auto">
             Book a Consultation
           </CtaLink>
           <CtaLink href={HTK_APPLICATION_PATH} variant="secondary" className="w-full sm:w-auto">
-            Apply for Coaching
+            Start Assessment
           </CtaLink>
         </div>
         <div className="mt-10 grid w-full max-w-4xl grid-cols-2 gap-3 md:grid-cols-4">
@@ -571,11 +572,11 @@ function FinalCta() {
           explosiveness, endurance, mobility, and real-world capability.
         </p>
         <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <CtaLink href={HTK_BOOKING_URL} external className="w-full sm:w-auto">
+          <CtaLink href={HTK_BOOKING_URL} className="w-full sm:w-auto">
             Book a Consultation
           </CtaLink>
           <CtaLink href={HTK_APPLICATION_PATH} variant="secondary" className="w-full sm:w-auto">
-            Apply for Coaching
+            Apply Now
           </CtaLink>
         </div>
       </div>
@@ -601,9 +602,9 @@ function Footer() {
           <Link href="/terms-of-service" className="transition hover:text-white">
             Terms of Service
           </Link>
-          <a href="mailto:contact@htktrainingco.com" className="transition hover:text-white">
+          <Link href="/contact" className="transition hover:text-white">
             Contact
-          </a>
+          </Link>
           <a href="mailto:support@htktrainingco.com" className="transition hover:text-white">
             Support
           </a>
@@ -616,26 +617,27 @@ function Footer() {
 function MobileCta() {
   return (
     <div className="fixed inset-x-3 bottom-3 z-50 grid grid-cols-[1.25fr_0.75fr_0.75fr] gap-2 border border-white/10 bg-[#070707]/90 p-2 shadow-[0_0_40px_rgba(0,0,0,0.55)] backdrop-blur md:hidden">
-      <Link
+      <TrackedPrimaryLink
         href="/signup"
+        label="Start Membership"
         className="inline-flex min-h-12 items-center justify-center rounded-md bg-red-500 px-3 text-center text-sm font-black leading-tight text-white shadow-[0_0_30px_rgba(220,38,38,0.35)]"
       >
         Start Membership
-      </Link>
-      <a
+      </TrackedPrimaryLink>
+      <TrackedPrimaryLink
         href={HTK_BOOKING_URL}
-        target="_blank"
-        rel="noreferrer"
+        label="Book"
         className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/20 px-3 text-sm font-black text-white"
       >
         Book
-      </a>
-      <Link
+      </TrackedPrimaryLink>
+      <TrackedPrimaryLink
         href={HTK_APPLICATION_PATH}
+        label="Apply"
         className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/20 px-3 text-sm font-black text-white"
       >
         Apply
-      </Link>
+      </TrackedPrimaryLink>
     </div>
   );
 }

@@ -15,7 +15,7 @@ export function Authority() {
             Hard to Kill Training is built for people who want the edge without the spectacle:
             AI systems, faceless content, monetization architecture, and daily execution.
           </p>
-          <ButtonLink href="/checkout" className="mt-8 w-full sm:w-auto">Access the System</ButtonLink>
+          <ButtonLink href="/checkout" className="mt-8 w-full sm:w-auto">Join HTK</ButtonLink>
         </div>
       </div>
     </section>

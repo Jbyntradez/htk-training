@@ -87,7 +87,7 @@ export default function ApplyPage() {
                 <Step number="02" body="If coaching makes sense, I will reach out with the next move." />
                 <Step number="03" body="If you want to talk first, you can book a consultation right now." />
               </div>
-              <CtaLink href={HTK_BOOKING_URL} external variant="secondary" className="mt-6 w-full">
+              <CtaLink href={HTK_BOOKING_URL} variant="secondary" className="mt-6 w-full">
                 Book a Consultation
               </CtaLink>
             </div>

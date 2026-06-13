@@ -9,6 +9,7 @@ import { ProgressRing } from "@/components/dashboard/ProgressRing";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Microcopy } from "@/components/ui/microcopy";
 import { Textarea } from "@/components/ui/textarea";
+import { event as analyticsEvent, trackCtaClick } from "@/lib/analytics";
 import { canManagePlatform } from "@/lib/role-permissions";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import type {
@@ -97,6 +98,23 @@ export function HtkDashboardClient() {
   }, [loadDashboard]);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("checkout") !== "success") {
+      return;
+    }
+
+    const storageKey = `htk_purchase_${window.location.pathname}_${params.toString()}`;
+
+    if (window.sessionStorage.getItem(storageKey)) {
+      return;
+    }
+
+    window.sessionStorage.setItem(storageKey, "true");
+    analyticsEvent("purchase", "Coaching Funnel", "Stripe Checkout");
+  }, []);
+
+  useEffect(() => {
     if (!supabase) {
       return;
     }
@@ -173,6 +191,8 @@ export function HtkDashboardClient() {
       return;
     }
 
+    trackCtaClick("Start Membership", "/checkout");
+    analyticsEvent("checkout_view", "Coaching Funnel", "Start Membership");
     setCheckoutLoading(true);
     setCheckoutError("");
 

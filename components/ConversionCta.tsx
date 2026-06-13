@@ -21,7 +21,7 @@ export function ConversionCta({
             <p className="mt-4 max-w-2xl text-sm leading-6 text-accent/62 sm:text-base">{body}</p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
-            <ButtonLink href="/checkout" className="w-full sm:w-auto">Access the System</ButtonLink>
+            <ButtonLink href="/checkout" className="w-full sm:w-auto">Join HTK</ButtonLink>
             {secondary && (
               <ButtonLink href="/product" variant="outline" className="w-full sm:w-auto">
                 See What Is Inside

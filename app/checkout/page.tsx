@@ -1,3 +1,4 @@
+import { EventOnMount } from "@/components/analytics/EventOnMount";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { Navbar } from "@/components/Navbar";
 import { ScarcityBanner } from "@/components/ScarcityBanner";
@@ -5,6 +6,11 @@ import { ScarcityBanner } from "@/components/ScarcityBanner";
 export default function CheckoutPage() {
   return (
     <>
+      <EventOnMount
+        action="checkout_view"
+        category="Coaching Funnel"
+        label="Checkout Page"
+      />
       <ScarcityBanner />
       <Navbar />
       <main className="container-px mx-auto grid min-h-[calc(100svh-104px)] max-w-5xl place-items-center py-16">

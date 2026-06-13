@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { trackCtaClick } from "@/lib/analytics";
 
 export function SupabaseSignupForm() {
   const [fullName, setFullName] = useState("");
@@ -14,6 +15,7 @@ export function SupabaseSignupForm() {
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    trackCtaClick("Start Membership", "/signup");
     setLoading(true);
     setMessage("");
 

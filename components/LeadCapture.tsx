@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { event as analyticsEvent } from "@/lib/analytics";
 
 export function LeadCapture({ source = "inline" }: { source?: string }) {
   const [email, setEmail] = useState("");
@@ -17,6 +18,10 @@ export function LeadCapture({ source = "inline" }: { source?: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, source })
     });
+
+    if (response.ok) {
+      analyticsEvent("lead_magnet_download", "Lead Magnet Funnel", source);
+    }
 
     setStatus(response.ok ? "success" : "error");
   }

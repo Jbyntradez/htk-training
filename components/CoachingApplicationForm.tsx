@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CtaLink } from "@/components/htk/CtaLink";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { event as analyticsEvent } from "@/lib/analytics";
 import {
   coachingApplicationCommitmentLevels,
   coachingApplicationTimeFrames,
@@ -32,11 +33,25 @@ export function CoachingApplicationForm() {
   const [errors, setErrors] = useState<CoachingApplicationErrors>({});
   const [status, setStatus] = useState<SubmissionState>("idle");
   const [message, setMessage] = useState("");
+  const assessmentStarted = useRef(false);
+
+  function trackAssessmentStarted() {
+    if (assessmentStarted.current) {
+      return;
+    }
+
+    assessmentStarted.current = true;
+    analyticsEvent("assessment_started", "Assessment Funnel", "Apply Page");
+  }
 
   function updateField<Key extends keyof CoachingApplicationPayload>(
     key: Key,
     value: CoachingApplicationPayload[Key]
   ) {
+    if (key !== "source" && typeof value === "string" && value.trim()) {
+      trackAssessmentStarted();
+    }
+
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
     if (status !== "idle") {
@@ -84,6 +99,7 @@ export function CoachingApplicationForm() {
       }
 
       setStatus("success");
+      analyticsEvent("assessment_completed", "Assessment Funnel", "Apply Page");
       setMessage("Application received. I will review it and reach out if coaching is the right fit.");
       setForm(initialState);
     } catch {
@@ -113,7 +129,7 @@ export function CoachingApplicationForm() {
             <p className="mt-4 text-sm leading-7 text-white/68">{message}</p>
           </div>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <CtaLink href={HTK_BOOKING_URL} external>
+            <CtaLink href={HTK_BOOKING_URL}>
               Book a Consultation
             </CtaLink>
             <button

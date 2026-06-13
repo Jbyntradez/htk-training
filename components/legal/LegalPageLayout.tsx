@@ -237,20 +237,12 @@ function LegalFooter() {
         <div>
           <p className="text-sm font-black uppercase tracking-wide text-white">Action</p>
           <div className="mt-4 grid gap-3 text-sm text-white/58">
-            <a
-              href={HTK_BOOKING_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="transition hover:text-white"
-            >
+            <Link href={HTK_BOOKING_URL} className="transition hover:text-white">
               Book a Consultation
-            </a>
-            <a
-              href="mailto:contact@htktrainingco.com"
-              className="transition hover:text-white"
-            >
+            </Link>
+            <Link href="/contact" className="transition hover:text-white">
               Contact
-            </a>
+            </Link>
             <a
               href="mailto:support@htktrainingco.com"
               className="transition hover:text-white"
